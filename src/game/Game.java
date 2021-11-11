@@ -82,7 +82,7 @@ public class Game {
             System.out.println("Tour de L'IA: ");
             if(this.isGloutonne){
 
-                int[] coordIA = this.model.IAGloutonBrave();
+                int[] coordIA = this.model.IAGlouton();
                 System.out.println("coord IA " + coordIA[0]+ ", " +coordIA[1]);
 
                 int[] resIA = this.model.changeValue(bleu, coordIA[0], coordIA[1]);

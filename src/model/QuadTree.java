@@ -46,21 +46,25 @@ public class QuadTree { // utiliser pour gérer les régions.
 	 * @param x 
 	 * @param y 
 	 * @param test, si à vrai pas d'ajout seulement test
-	 * @return int, -1 si full et 0 si ajout possible.
+	 * @return int, -1 si full et 0 si ajout possible, 1 si full après ajout
 	 */
 	public int addValue(int x, int y, boolean test) {
-		if (this.testIfFull()) {
+		if (this.nbCaseFull == this.side * this.side) {
+			this.isFull = true;
 			return -1;
 		} else {
-			if (this.side == 3) {
+			if (this.side == 3 || this.n == 0) {
 				if(!test) {
 					this.nbCaseFull++;
+					if (this.nbCaseFull == this.side * this.side) {
+						if(this.father != null) {
+							this.father.nbCaseFull++;
+						}
+						return 1;
+					}
 				}
 				return 0;
 			} else {
-				if(this.n == 0) {
-					return -1;
-				}
 				if (this.sons == null) {
 					this.sons = new QuadTree[4];
 				}
@@ -103,8 +107,11 @@ public class QuadTree { // utiliser pour gérer les régions.
 	private boolean testIfFull() {
 		if (this.nbCaseFull == this.side * this.side) {
 			this.isFull = true;
-			this.father.nbCaseFull++;
-			this.father.testIfFull();
+			if(this.father != null) {
+				this.father.nbCaseFull++;
+				this.father.testIfFull();
+			}
+			
 			return true;
 		} else {
 			this.isFull = false;
@@ -114,5 +121,8 @@ public class QuadTree { // utiliser pour gérer les régions.
 
 	public int getSide() {
 		return this.side;
+	}
+	public boolean getisFull() {
+		return this.isFull;
 	}
 }
