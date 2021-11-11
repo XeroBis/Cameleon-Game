@@ -4,8 +4,6 @@ import java.util.Scanner;
 
 import model.Model;
 
-import static java.lang.Math.pow;
-
 public class Game {
     private int scoreBleu;
     private int scoreRouge;
@@ -54,6 +52,7 @@ public class Game {
             System.out.println("Vous avez donc choisi la version Intelligente !");
             this.setGloutonne(false);
         }
+        scan.close();
     }
 
     private void to_string(){
