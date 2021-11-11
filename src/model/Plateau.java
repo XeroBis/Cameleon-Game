@@ -73,7 +73,6 @@ public class Plateau {
 			res[0] = -1;
 			return res;
 		}
-		System.out.print("x : " + x + ", y: " + y);
 		if(this.plateau[x][y] == blanc && !voisin) {
 			this.plateau[x][y] = color;
 			if(color == rouge) {

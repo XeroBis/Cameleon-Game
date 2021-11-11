@@ -29,7 +29,6 @@ public class Model {
     	}
     }
     
-    
     public int[] changeValueBrave(char color, int x, int y) {
     	int[] score = new int[3];
     	score = this.plateau.changeValue(color, x, y, false);
