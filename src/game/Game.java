@@ -38,7 +38,6 @@ public class Game {
             this.setBrave(false);
             this.setModel(new Model(n, false));
         }
-        /**
         System.out.println("L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
         int versionIA = -1;
         while(versionIA != 0 && versionIA != 1) {
@@ -52,7 +51,7 @@ public class Game {
             System.out.println("Vous avez donc choisi la version Intelligente !");
             this.setGloutonne(false);
         }
-        */
+        
         //scan.close();
     }
 
@@ -79,21 +78,17 @@ public class Game {
             //System.out.println("score en plus : "+res[2]);
 
             changeScore(res[1], res[2]);
-            /**
+
             System.out.println("Tour de L'IA: ");
-            System.out.println(this.isGloutonne);
             if(this.isGloutonne){
 
-                int[] coordIA = this.model.getTree().IAGlouton(this.isBrave);
+                int[] coordIA = this.model.IAGloutonBrave();
                 System.out.println("coord IA " + coordIA[0]+ ", " +coordIA[1]);
 
-                int[] resIA = this.model.changevalue(bleu,  coordIA[0], coordIA[1]);
+                int[] resIA = this.model.changeValue(bleu, coordIA[0], coordIA[1]);
                 changeScore(resIA[1], resIA[2]);
 
-            } else {
-                this.model.getTree().IAintelligent();
-            }
-            */
+            } 
         }
         scan.close();
 
@@ -133,6 +128,12 @@ public class Game {
 
     private Model getModel(){ return this.model;}
     private void setModel(Model model){
+
         this.model = model;
     }
+    
+    private void setGloutonne(boolean g) {
+    	this.isGloutonne = g;
+    }
+    
 }

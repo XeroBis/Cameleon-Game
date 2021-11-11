@@ -102,5 +102,9 @@ public class Plateau {
 	public int getTaille() {
 		return this.taille;
 	}
+
+	public char getValue(int x, int y) {
+		return this.plateau[x][y];
+	}
 }
 

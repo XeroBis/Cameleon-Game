@@ -98,6 +98,54 @@ public class Model {
     	return this.side;
     }
     
+    public int IAGloutonTestValue(int color, int x, int y){
+        int pts = 0;
+        char[] colors = new char[9];
+        int indice = 0;
+        for (int i = x - 1; i < x+2 ; i++) {
+            if(i>= 0 && i < this.getSide()){
+                for (int j = y-1; j <y+2; j++) {
+                    if(j >=0 && j < this.getSide()){
+                        if (i != x || j != y) {
+                            colors[indice] = this.plateau.getValue(i, j);
+                        }
+                        indice++;
+
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            if(colors[i]==rouge){
+                pts++;
+            }
+        }
+        return pts;
+
+    }
+    public int[] IAGloutonBrave() {
+    	int [] res = new int[2];
+        int maxScore = 0;
+        for (int i = 0; i <this.getSide() ; i++) {
+            for (int j = 0; j < this.getSide(); j++) {
+                if(this.plateau.getValue(i, j) == blanc){
+                    int pts = this.IAGloutonTestValue(bleu, i, j);
+                    if(pts > maxScore){
+                        System.out.println("maxscore " +  maxScore + ", pts: " + pts + ", res[0] = "+ i + ", res[1] =" +j);
+                        maxScore = pts;
+                        res[0] = i;
+                        res[1] = j;
+                    }
+                }
+
+            }
+
+        }
+        return res;
+    }
+    
+    
     public void to_string() {
     	this.plateau.to_string();
     }

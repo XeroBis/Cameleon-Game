@@ -38,9 +38,6 @@ public class QuadTree { // utiliser pour gérer les régions.
 		return result;
 	}
 
-	
-	
-	
 	/**
 	 * Cette fonction sert à savoir si l'on peut ajouter une couleur dans certaines coordonnés.
 	 * Ajoute ou non une valeur dans une région selon les coordonnées x et y et si test est a vrai on n'ajoute
@@ -96,6 +93,13 @@ public class QuadTree { // utiliser pour gérer les régions.
 		return 0;
 	}
 
+	
+	
+	/**
+	 * fonction qui test si un QuadTree est plein
+	 *
+	 * @return boolean si le QuadTree actuel est plein (modifie aussi la valeur de isFull)
+	 */
 	private boolean testIfFull() {
 		if (this.nbCaseFull == this.side * this.side) {
 			this.isFull = true;
@@ -108,4 +112,7 @@ public class QuadTree { // utiliser pour gérer les régions.
 		}
 	}
 
+	public int getSide() {
+		return this.side;
+	}
 }
