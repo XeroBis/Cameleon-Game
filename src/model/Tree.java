@@ -133,24 +133,29 @@ public class Tree {
                 }
                 pos = x*3+y; // on à la coordonées du point que l'on veut changer de couleur dans la région 3x3
 
-                if (voisin && father.getSons()[pos].getColor() !=color && father.getSons()[pos].getColor() != blanc) {
-                    father.setSon(color, pos);
-                    res[color]++;
-                    if (color == bleu) {
+                if (voisin && father.getSons()[pos].getColor() !=color && father.getSons()[pos].getColor() != blanc) { // cas de si la case est un appel pour un voisin (càd on recolorie la couleur adverse
+                    // si la case qu'on colorie est une case voisine du point donnée (on doit donc colorier ses voisins qui sont de couleur différente mais pas les blanc
+                	father.setSon(color, pos); // comme c'est ni blanc ni de la meme couleur, on change sa couleur en la couleur actuelle
+                    res[color]++; // on à donc gagné un point.
+                    if (color == bleu) { // ici on teste la couleur courante pour savoir a qui ont doit enlever un point.
                         res[rouge]--;
                     } else {
                         res[bleu]--;
                     }
-                }else if (father.getSons()[pos].getColor() != blanc && !voisin){
+                }else if (father.getSons()[pos].getColor() != blanc && !voisin){ // si ça n'est pas une case voisine et si la case n'est pas blanche
+                	// alors on ne doit pas la colorier on renvoit donc -1 pour le statut de l'erreur
                     res[0] = -1;
                     return res;
 
-                } else if (father.getSons()[pos].getColor() == blanc && !voisin){
+                } else if (father.getSons()[pos].getColor() == blanc && !voisin){ // si ça n'est pas une case voisine et si la case est blanche 
+                	//on peut donc la colorier
                     father.setSon(color, pos);
 
-                    int[] filled = checkIfFilled(father);
-                    res[color] ++;
-                    if(!brave){
+                    
+                    res[color] ++; // on à gagné un point
+                    
+                    if(!brave){ // si on est en téméraire on doit donc tester les zones.
+                    	int[] filled = checkIfFilled(father); // on teste si notre coloration à remplie toute la région.
                         while(filled[0] == 0) {
                             int pts = getNbOfPoints(father);
                             father.setisFilled(true);
@@ -192,7 +197,6 @@ public class Tree {
                 }
                 done = true;
             }
-        }
         return  res;
     }
 

@@ -9,7 +9,7 @@ public class Game {
     private int scoreRouge;
     private boolean isBrave;
     private boolean isGloutonne;
-    public static int blanc = 0, bleu = 1, rouge = 2 ;
+    public static char blanc = 'A', bleu = 'B', rouge = 'R';
 
     private Model model;
 
@@ -38,7 +38,7 @@ public class Game {
             this.setBrave(false);
             this.setModel(new Model(n, false));
         }
-
+        /**
         System.out.println("L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
         int versionIA = -1;
         while(versionIA != 0 && versionIA != 1) {
@@ -52,7 +52,8 @@ public class Game {
             System.out.println("Vous avez donc choisi la version Intelligente !");
             this.setGloutonne(false);
         }
-        scan.close();
+        */
+        //scan.close();
     }
 
     private void to_string(){
@@ -69,16 +70,16 @@ public class Game {
 
             System.out.println("JOUEUR 1 : ");
             int[] coord = chooseCoordinate();
-            int[] res = model.changevalue(rouge,coord[0],coord[1]);
+            int[] res = model.changeValue(rouge,coord[0],coord[1]);
             while(res[0]!= 0){
                 System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
                 coord = chooseCoordinate();
-                res = model.changevalue(rouge,coord[0],coord[1]);
+                res = model.changeValue(rouge,coord[0],coord[1]);
             }
             //System.out.println("score en plus : "+res[2]);
 
             changeScore(res[1], res[2]);
-
+            /**
             System.out.println("Tour de L'IA: ");
             System.out.println(this.isGloutonne);
             if(this.isGloutonne){
@@ -92,6 +93,7 @@ public class Game {
             } else {
                 this.model.getTree().IAintelligent();
             }
+            */
         }
         scan.close();
 
@@ -117,7 +119,6 @@ public class Game {
             res[1] = scan.nextInt();
         }
         System.out.println("Vous avez choisi le point en ("+res[0] +","+res[1]+")");
-        scan.close();
         return res;
     }
     
@@ -128,10 +129,6 @@ public class Game {
 
     private void setBrave(boolean brave) {
         isBrave = brave;
-    }
-
-    private void setGloutonne(boolean gloutonne) {
-        isGloutonne = gloutonne;
     }
 
     private Model getModel(){ return this.model;}
