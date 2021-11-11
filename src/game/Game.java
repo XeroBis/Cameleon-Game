@@ -94,6 +94,7 @@ public class Game {
                 this.model.getTree().IAintelligent();
             }
         }
+        scan.close();
 
     }
 
@@ -118,6 +119,7 @@ public class Game {
             res[1] = scan.nextInt();
         }
         System.out.println("Vous avez choisi le point en ("+res[0] +","+res[1]+")");
+        scan.close();
         return res;
     }
     
@@ -126,30 +128,10 @@ public class Game {
         this.scoreBleu += scoreAddBleu;
     }
 
-    private int getScoreBleu() {
-        return scoreBleu;
-    }
-    private void setScoreBleu(int scoreBleu) {
-        this.scoreBleu = scoreBleu;
-    }
-
-    private int getScoreRouge() {
-        return scoreRouge;
-    }
-    private void setScoreRouge(int scoreRouge) {
-        this.scoreRouge = scoreRouge;
-    }
-
-    private boolean isBrave() {
-        return isBrave;
-    }
     private void setBrave(boolean brave) {
         isBrave = brave;
     }
 
-    private boolean isGloutonne() {
-        return isGloutonne;
-    }
     private void setGloutonne(boolean gloutonne) {
         isGloutonne = gloutonne;
     }
