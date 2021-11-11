@@ -80,41 +80,40 @@ public class Tree {
      */
     private int[] changeValue(Tree father, int color, int x, int y, boolean voisin, boolean brave){
         int [] res = new int[3]; // le tableau contenant le changement de valeur des points du joueur bleu, rouge ainsi que si la valeur à été changé
-        int side = father.getSide();
+        int side = father.getSide(); // taille du coté
         boolean done = false;
 
         while(!done){
-            if(father.getisFilled()){
+            if(father.getisFilled()){ // si l'arbre est remplie (tout ses cases sont rouge ou toutes ses cases sont bleu
                 res[0] = -1;
                 return res;
             }
-            if(father.getNumberOfSons()==4){
-                if (x < side / 2 && y < side / 2) {
-                    if(father.getSons()[0].getisFilled()){
+            if(father.getNumberOfSons()==4){ // si le pere à 4 fils, donc on n'est pas encore au feuille
+                if (x < side / 2 && y < side / 2) { // si les deux coordonnés sont plus petite que la moitié, on est donc dans le coin haut gauche
+                    if(father.getSons()[0].getisFilled()){ // on test si ce coin n'est pas deja filled
                         res[0] = -1;
                         return res;
                     }
-                    father = father.getSons()[0];
+                    father = father.getSons()[0]; // sinon on passe au prochain fils.
 
-                } else if (x < side / 2 && y >= side / 2) {
+                } else if (x < side / 2 && y >= side / 2) { // si les coordonnées nous positionne dans le coin haut droit
                     if(father.getSons()[1].getisFilled()){
                         res[0] = -1;
                         return res;
                     }
-                    father = father.getSons()[1];
-                    side = side/2;
-                    y = y - side;
+                    father = father.getSons()[1]; // on passe au fils
+                    side = side/2; // sans obulier de diviser par deux la taille du coté
+                    y = y - side; // on enleve la valeur de side de la coordonnées qui était plus grande.
 
-                } else if (x >= side / 2 && y < side / 2) {
-                    if(father.getSons()[2].getisFilled()){
+                } else if (x >= side / 2 && y < side / 2) {// si les coordonnées nous positionne dans le coin bas gauche                    if(father.getSons()[2].getisFilled()){
                         res[0] = -1;
                         return res;
                     }
-                    father = father.getSons()[2];
-                    side = side/2;
+                    father = father.getSons()[2]; // on passe au bon fils
+                    side = side/2; // on divise la taille du coté
                     x = x - side;
 
-                } else if (x >= side / 2 && y >= side / 2) {
+                } else if (x >= side / 2 && y >= side / 2) { // si les coordonnées nous positionne dans le coin bas droit
                     if(father.getSons()[3].getisFilled()){
                         res[0] = -1;
                         return res;
@@ -126,17 +125,13 @@ public class Tree {
                     y = y - side;
                 }
             }
-            if(father.getNumberOfSons() == 9){
+            if(father.getNumberOfSons() == 9){ // si le pere à 9 fils alors ses fils sont des feuilles
                 int pos;
-                if (x < 0 || y < 0) {
+                if (x < 0 || y < 0 || x>2 || y > 2) { // on teste la coordonnées est valide (surtout utile pour les voisins)
                     res[0]= -1;
                     return res;
                 }
-                if(x>2 || y > 2){
-                    res[0] = -1;
-                    return res;
-                }
-                pos = x*3+y;
+                pos = x*3+y; // on à la coordonées du point que l'on veut changer de couleur dans la région 3x3
 
                 if (voisin && father.getSons()[pos].getColor() !=color && father.getSons()[pos].getColor() != blanc) {
                     father.setSon(color, pos);
@@ -160,6 +155,7 @@ public class Tree {
                             int pts = getNbOfPoints(father);
                             father.setisFilled(true);
                             if (filled[1]> filled[2]){// il y a plus de bleu que de rouge on change tout en bleu
+                            	father.setColor(bleu);
                                 for (int i = 0; i <father.getNumberOfSons() ; i++) {
                                     if(father.getSons()[i].getColor() == rouge){
                                         res[2] -= pts;
@@ -168,6 +164,7 @@ public class Tree {
                                     }
                                 }
                             }else if (filled[1]< filled[2]){ // il y a plus de rouge que de bleu
+                            	father.setColor(rouge);
                                 for (int i = 0; i <father.getNumberOfSons() ; i++) {
                                     if(father.getSons()[i].getColor() == bleu){
                                         res[1] -= pts;
@@ -176,6 +173,7 @@ public class Tree {
                                     }
                                 }
                             }else {//si il y a égalité
+                            	father.setColor(color);
                                 for (int i = 0; i <father.getNumberOfSons() ; i++) {
                                     if(color==bleu){
                                         father.setSon(bleu, i);
@@ -192,10 +190,8 @@ public class Tree {
                         }
                     }
                 }
-
                 done = true;
             }
-
         }
         return  res;
     }
@@ -382,6 +378,7 @@ public class Tree {
         return pts;
 
     }
+    
     public int getColor(Tree father, int x, int y){
         if (father.getNumberOfSons()== 9){
             int pos = x * 3 + y;
@@ -399,6 +396,7 @@ public class Tree {
             }
         }
     }
+    
     public int[] IAGlouton(boolean brave) {
         //on va tester toute les coordonnées.
         int [] res = new int[2];
@@ -414,13 +412,10 @@ public class Tree {
                         res[1] = j;
                     }
                 }
-
             }
-
         }
         return res;
     }
-
 
     public void IAintelligent(){
 
@@ -487,4 +482,5 @@ public class Tree {
     void setFather(Tree father){
         this.father = father;
     }
+    
 }

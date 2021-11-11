@@ -101,7 +101,6 @@ public class Game {
 
     }
 
-
     private int[] chooseCoordinate(){
         int[] res = new int[2];
         Scanner scan = new Scanner(System.in);

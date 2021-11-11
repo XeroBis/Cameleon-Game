@@ -6,17 +6,17 @@ public class Model {
     private Tree tree;
     int scoreBleu;
     int scoreRouge;
-    public static int blanc = 0, bleu = 1, rouge = 2 ;
+    public static int blanc = 0, bleu = 1, rouge = 2;
     boolean isBrave;
 
     public Model(int n, boolean isBrave){
         this.scoreBleu = 0;
         this.scoreRouge = 0;
-        this.plateau = new Plateau(n);
         this.isBrave = isBrave;
         this.tree = new Tree();
         this.tree = tree.createFamily(null, n);
     }
+    
     public void to_string(){
         this.tree.to_string();
     }
@@ -40,23 +40,19 @@ public class Model {
     public Plateau getPlateau() {
     	return this.plateau;
     }
+    
     public Tree getTree() {
     	return this.tree;
     }
+    
     public int getTaille(){
-        if (this.getBrave()){
-            return plateau.getTaille();
-        } else {
-            return tree.getTaille();
-        }
+    	return tree.getTaille();
     }
+    
     public int getSide(){
-        if (this.getBrave()){
-            return plateau.getSide();
-        } else {
-            return tree.getSide();
-        }
+    	return tree.getSide();
     }
+    
     boolean getBrave(){
         return  this.isBrave;
     }
