@@ -69,13 +69,24 @@ public class Game {
 
             System.out.println("JOUEUR 1 : ");
             int[] coord = chooseCoordinate();
-            boolean play = this.model.colorationBrave(rouge, coord[1], coord[0]);
+            boolean play = this.model.colorationBrave(coord[1], coord[0], rouge);
             while(!play){
                 System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
                 coord = chooseCoordinate();
-                play = this.model.colorationBrave(rouge,coord[0],coord[1]);
+                play = this.model.colorationBrave(coord[1],coord[0], rouge);
             }
-            //System.out.println("score en plus : "+res[2]);
+            
+            this.to_string();
+            System.out.println("JOUEUR 2 : ");
+            coord = chooseCoordinate();
+            play = this.model.colorationBrave(coord[1], coord[0], bleu);
+            while(!play){
+                System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+                coord = chooseCoordinate();
+                play = this.model.colorationBrave(coord[1],coord[0], bleu);
+            }
+            
+            
 
         }
         scan.close();
@@ -92,22 +103,17 @@ public class Game {
         System.out.print("Veuillez entrez un numero de ligne :");
         res[0] = scan.nextInt();
         while(res[0] > model.getSize()-1 || res[0] < 0){
-            System.out.println("Veuillez indiquez un numéro de ligne compris entre 0 et" + model.getSide()+ " exclus.");
+            System.out.println("Veuillez indiquez un numéro de ligne compris entre 0 et" + model.getSize()+ " exclus.");
             res[0] = scan.nextInt();
         }
         System.out.print("Veuillez entrez un numero de colonne :");
         res[1] = scan.nextInt();
         while(res[1] > model.getSize()-1 || res[1] < 0){
-            System.out.println("Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSide()+ " exclus.");
+            System.out.println("Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize()+ " exclus.");
             res[1] = scan.nextInt();
         }
         System.out.println("Vous avez choisi le point en ("+res[0] +","+res[1]+")");
         return res;
-    }
-    
-    private void changeScore(int scoreAddBleu, int scoreAddRouge){
-        this.scoreRouge += scoreAddRouge;
-        this.scoreBleu += scoreAddBleu;
     }
 
     private void setBrave(boolean brave) {

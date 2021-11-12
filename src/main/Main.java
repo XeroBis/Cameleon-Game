@@ -10,11 +10,20 @@ import controller.Controller;
 import model.Model;
 import view.View;
 
+import game.Game;
+
 public class Main
 {
 	public static Scanner scan = new Scanner(System.in);
 	public static Model test = new Model();
 	
+	public static void main(String[] args) {
+		Game g = new Game(1);
+		g.playJvJ();
+	}
+	
+
+	/*
 	public static void readTextFile(String filename) throws IOException
 	{
 		String dir = System.getProperty("user.dir");
@@ -134,7 +143,6 @@ public class Main
 	}
 	
 	
-	
 	public static void main (String args[]) throws IOException
 	{
 		boolean choose = true;
@@ -187,5 +195,5 @@ public class Main
 			if(a==1) {a=2;}
 			else {a=1;}
 		}
-	}
+	}*/
 }
