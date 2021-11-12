@@ -1,128 +1,131 @@
 package model;
 
-public class QuadTree { // utiliser pour gérer les régions.
-
-	private int side;
-	private int n;
-	private boolean isFull;
-	private int nbCaseFull;
-	public static char blanc = 'A', bleu = 'B', rouge = 'R';
-	private char color;
-	private QuadTree[] sons;
-	private QuadTree father;
-
-	public QuadTree(int n) {
-		this.isFull = false;
-		this.nbCaseFull = 0;
-		this.color = blanc;
-		this.father = null;
-		this.sons = null;
-		if (n == 0) {
-			this.side = 3;
-		} else {
-			this.side = (int) (6 * this.pow(2, n - 1));
-		}
-	}
-
-	/**
-	 * Cette fonction retourne i à la puissance n
-	 *
-	 * @param i, le nombre a mettre à la puissance et n la puissance
-	 * @return i^n
-	 */
-	private int pow(int i, int n) {
-		int result = 1;
-		for (int x = 0; x < n; x++) {
-			result = result * i;
-		}
-		return result;
-	}
-
-	/**
-	 * Cette fonction sert à savoir si l'on peut ajouter une couleur dans certaines coordonnés.
-	 * Ajoute ou non une valeur dans une région selon les coordonnées x et y et si test est a vrai on n'ajoute
-	 * pas de valeur
-	 *
-	 * @param x 
-	 * @param y 
-	 * @param test, si à vrai pas d'ajout seulement test
-	 * @return int, -1 si full et 0 si ajout possible, 1 si full après ajout
-	 */
-	public int addValue(int x, int y, boolean test) {
-		if (this.nbCaseFull == this.side * this.side) {
-			this.isFull = true;
-			return -1;
-		} else {
-			if (this.side == 3 || this.n == 0) {
-				if(!test) {
-					this.nbCaseFull++;
-					if (this.nbCaseFull == this.side * this.side) {
-						if(this.father != null) {
-							this.father.nbCaseFull++;
-						}
-						return 1;
-					}
-				}
-				return 0;
-			} else {
-				if (this.sons == null) {
-					this.sons = new QuadTree[4];
-				}
-				if (x < this.side / 2 && y < this.side / 2) { // coin haut gauche
-					if (this.sons[0] == null) {
-						this.sons[0] = new QuadTree(this.n - 1);
-					}
-					System.out.println("test taille n :" + this.n);
-					sons[0].addValue(x, y, test);
-
-				} else if (x < this.side / 2 && y >= this.side / 2) {// coint haut droit
-					if (this.sons[1] == null) {
-						this.sons[1] = new QuadTree(this.n - 1);
-					}
-					sons[1].addValue(x, y, test);
-				} else if (x >= this.side / 2 && y < this.side / 2) { // coin bas gauche
-					if (this.sons[2] == null) {
-						this.sons[2] = new QuadTree(this.n - 1);
-					}
-					sons[2].addValue(x, y, test);
-				} else if (x >= this.side / 2 && y >= this.side / 2) { // coin bas gauche
-					if (this.sons[3] == null) {
-						this.sons[3] = new QuadTree(this.n - 1);
-					}
-					sons[3].addValue(x, y, test);
-				}
-			}
-		}
-
-		return 0;
-	}
-
+public class QuadTree 
+{
+	private Integer value;
+	private Point point;
+	private QuadTree qt0, qt1, qt2, qt3;
 	
+	public static int blanc = 0,
+	          		  bleu  = 1,
+	          		  rouge = 2;
 	
-	/**
-	 * fonction qui test si un QuadTree est plein
-	 *
-	 * @return boolean si le QuadTree actuel est plein (modifie aussi la valeur de isFull)
-	 */
-	private boolean testIfFull() {
-		if (this.nbCaseFull == this.side * this.side) {
-			this.isFull = true;
-			if(this.father != null) {
-				this.father.nbCaseFull++;
-				this.father.testIfFull();
-			}
+	public QuadTree()
+	{
+		this.value = null;
+		this.point = null;
+		
+		this.qt0 = null;
+		this.qt1 = null;
+		this.qt2 = null;
+		this.qt3 = null;
+	}
+	
+	public QuadTree(Integer value, Point point, QuadTree qt0, QuadTree qt1, QuadTree qt2, QuadTree qt3)
+	{
+		this.value = value;
+		this.point = point;
+		
+		this.qt0 = qt0;
+		this.qt1 = qt1;
+		this.qt2 = qt2;
+		this.qt3 = qt3;
+	}
+	
+	public void setQt(int index, QuadTree newQuad)
+	{
+		switch(index)
+		{
+		case 0:
+			this.qt0 = newQuad;
+			break;
 			
-			return true;
-		} else {
-			this.isFull = false;
-			return false;
+		case 1:
+			this.qt1 = newQuad;
+			break;
+			
+		case 2:
+			this.qt2 = newQuad;
+			break;
+			
+		case 3:
+			this.qt3 = newQuad;
+			break;
+			
+		default:
+			System.out.println("Pas le bon choix d'index, doit etre compris entre 0 et 3 (inclus)");
 		}
 	}
-
-	public int getSide() {
-		return this.side;
+	
+	public void setValue (Integer newValue)
+	{
+		this.value = newValue;
 	}
-	public boolean getisFull() {
-		return this.isFull;
+	
+	public void setPoint (Point newPoint)
+	{
+		this.point = newPoint;
+	}
+	
+	public QuadTree getQt(int index)
+	{
+		QuadTree ret = null;
+		
+		switch(index)
+		{
+		case 0:
+			ret = this.qt0;
+			break;
+			
+		case 1:
+			ret = this.qt1;
+			break;
+			
+		case 2:
+			ret = this.qt2;
+			break;
+			
+		case 3:
+			ret = this.qt3;
+			break;
+			
+		default:
+			System.out.println("Pas le bon choix d'index, doit etre compris entre 0 et 3 (inclus)");
+		}
+		return ret ;
+	}
+	
+	public int getValue()
+	{
+		return this.value;
+	}
+	
+	public Point getPoint()
+	{
+		return this.point;
+	}
+	
+	public void printValuePoint()
+	{
+		if(this.point != null && this.value != null)
+		{
+			System.out.println(this.value + ";" + this.point.getx() + ";" + this.point.gety());
+		}
+		if(this.qt0 != null )
+		{
+			qt0.printValuePoint();
+		}
+		if(this.qt1 != null )
+		{
+			qt1.printValuePoint();
+		}
+		if(this.qt2 != null )
+		{
+			qt2.printValuePoint();
+		}
+		if(this.qt3 != null )
+		{
+			qt3.printValuePoint();
+		}
 	}
 }
