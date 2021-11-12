@@ -362,23 +362,37 @@ public class Model
 	public void actualizingArrayPoints() 
 	{
 		Point p;
-		
-		for (int i = 0; i < redPoints.size(); i++)
+		int[] removePoints;
+		for (int i = redPoints.size() - 1; i >= 0; i--)
 		{
 			p = redPoints.get(i);
-			if ()
+			if (!hasFreeNeighbor(p.gety(), p.getx()))
+			{
+				
+			}
 		}
-		for (int i = 0; i < bluePoints.size(); i++)
+		for (int i = bluePoints.size() - 1; i >= 0; i--)
 		{
 			p = bluePoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()))
+			{
+				
+			}
 		}
 	}
 	
-	public void hasFreeNeighbord(int ligne, int col)
+	public boolean hasFreeNeighbor(int ligne, int col)
 	{
 		for(int i = -1; i < 2; i++)
 		{
-			for (int j = -1; int )
+			for (int j = -1; j < 2; j++)
+			{
+				if(plateau.couleurCase(ligne + i, col + j) == 0)
+				{
+					return true;
+				}
+			}
 		}
+		return false;
 	}
 }
