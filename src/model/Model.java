@@ -354,11 +354,11 @@ public class Model
 	{
 		for (int i = 0; i < redPoints.size(); i++)
 		{
-			
+			Point p = redPoints.get(i);
 		}
-		for (int i = 0; i < redPoints.size(); i++)
+		for (int i = 0; i < bluePoints.size(); i++)
 		{
-			
+			Point p = bluePoints.get(i);
 		}
 	}
 }
