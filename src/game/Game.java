@@ -15,8 +15,8 @@ public class Game {
 
     private Model model;
 
-    public Game(int n){
-        parametreOfGame(n);
+    public Game() throws IOException {
+       loadFiles();
     }
 
     
@@ -68,6 +68,13 @@ public class Game {
 		
 		
     }
+    
+    
+    public void play() throws IOException {
+    	this.loadFiles();
+    }
+    
+    
     
     private void parametreOfGame(int n){
         System.out.println("Le jeu commence !");
