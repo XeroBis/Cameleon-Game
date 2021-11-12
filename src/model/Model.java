@@ -1,4 +1,4 @@
-package model;
+	package model;
 
 import java.util.ArrayList;
 
@@ -6,13 +6,17 @@ public class Model
 {
 	//******************** Attributs et Constructeurs de la classe Model ********************//
 	
-	private Plateau plateau; // le plateau de jeu
+	private Plateau plateau; // le plateau de jeu.
 	private QuadTree QuadTree; // l'arbre pour les régions.
-	private int size;
+	private int size; // la taille du coté.
 	
-	private ArrayList<Point> redPoints, bluePoints;
-	private int redScore, blueScore;
+	private ArrayList<Point> redPoints, bluePoints; // 2 tableau qui contiennent les points qui peuvent être pris.
+	private int redScore, blueScore; // les deux ints des scores.
 	
+	
+	/*
+	 * constructeur de Model
+	 */
 	public Model() 
 	{
 		this.redPoints = new ArrayList<Point>();
