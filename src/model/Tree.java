@@ -40,6 +40,7 @@ public class Tree {
             t.setisSterile(true);
             t.setFather(father);
             t.setNumberOfSons(0);
+            t.setColor(blanc);
             return t;
         }
         Tree f = new Tree(n);
@@ -140,6 +141,7 @@ public class Tree {
                         res[1]--;
                     }
                 }else if (father.getSons()[pos].getColor() != blanc && !voisin){
+                	System.out.println("test erreur, couleur : " + father.getSons()[pos].getColor());
                     res[0] = -1;
                     return res;
 
@@ -335,17 +337,17 @@ public class Tree {
      *
      * @return int[][] : toute les valeurs du plateau de jeu
      */
-    int[][] getTableau(){
+    char[][] getTableau(){
         // on transforme notre abre en tableau pour répercuter nos modifications de région sur le tableau
-        int[][] res = new int[this.getSide()][this.getSide()];
+        char[][] res = new char[this.getSide()][this.getSide()];
         for (int i = 0; i <this.getSide() ; i++) {
             res[i] = getRow(this, i);
         }
         return res;
     }
 
-    int[] getRow(Tree father, int row){
-        int[] res = new int[father.getSide()*4];
+    char[] getRow(Tree father, int row){
+        char[] res = new char[father.getSide()*4];
         if(father.getNumberOfSons()==9){
             Tree[] sons = father.getSons();
             res[0] = sons[3*row].color;
@@ -355,7 +357,7 @@ public class Tree {
         } else if (father.getNumberOfSons() == 4){
             int halfside = father.getSide()/2;
             Tree[] sons = father.getSons();
-            int[] res1;
+            char[] res1;
             if (row>= halfside){
                 res = getRow(sons[2], row - halfside);
                 res1 = getRow(sons[3], row - halfside);
@@ -375,7 +377,7 @@ public class Tree {
 
     public void to_string(){
         System.out.print("  ");
-        int[][] tableau = this.getTableau();
+        char[][] tableau = this.getTableau();
         for(int k = 0; k<3*pow(2, this.taille); k++){
             System.out.print(" " + k + "");
         }
@@ -416,7 +418,7 @@ public class Tree {
         return pts;
 
     }
-    public int getColor(Tree father, int x, int y){
+    public char getColor(Tree father, int x, int y){
         if (father.getNumberOfSons()== 9){
             int pos = x * 3 + y;
             return father.getSons()[pos].getColor();
@@ -462,7 +464,7 @@ public class Tree {
     /**
      * Partie Getter et Setter
      */
-    int getColor(){
+    char getColor(){
         return this.color;
     }
     void setColor(char c){

@@ -58,7 +58,7 @@ public class Game {
     private void to_string(){
         System.out.println("SCORE :");
         System.out.println("bleu : " + scoreBleu + " , rouge : " + scoreRouge);
-        this.getModel().to_string();
+        this.model.to_string();
     }
 
     public void play() {

@@ -18,7 +18,7 @@ public class Model {
 		this.isBrave = isBrave;
 		this.plateau = new Plateau(n);
 		if (isTree) {
-			this.tree = new Tree(n);
+			this.tree = new Tree();
 			this.tree = tree.createFamily(null, n);
 			this.side = this.tree.getSide();
 			this.isTree = isTree;
@@ -32,6 +32,7 @@ public class Model {
 
 	public int[] changeValue(char color, int x, int y) {
 		if(this.isTree) {
+			System.out.print("test si tree");
 			return this.tree.changeValue(tree, color, x, y, this.isBrave);
 		}else {
 			if (this.isBrave) {
@@ -167,7 +168,12 @@ public class Model {
 	}
 
 	public void to_string() {
-		this.plateau.to_string();
+		if(this.isTree) {
+			this.tree.to_string();
+		}else {
+
+			this.plateau.to_string();
+		}
 	}
 
 }
