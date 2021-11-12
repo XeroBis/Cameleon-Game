@@ -19,6 +19,56 @@ public class Game {
         parametreOfGame(n);
     }
 
+    
+    private void loadFiles() throws IOException {
+    	Scanner scan = new Scanner(System.in);
+    	
+    	boolean choose = true;
+		boolean preload = false;
+		
+		while(choose)
+		{
+			System.out.print("Voulez vous charger un plateau (y/n) : ");
+			String resp = scan.next();
+			System.out.println();
+			
+			switch (resp)
+			{
+			case "y" :
+				preload = true;
+				choose = false;
+			break;
+			case "n" :
+				preload = false;
+				choose = false;
+			break;
+			default :
+				System.out.println("Reponse non valide, seuls 'y' et 'n' sont valides");
+			break;
+			}
+		}
+		
+		if(preload) { // donc on load un fichier
+			
+			System.out.print("entrez un nom de fichier : ");
+			String name = scan.next();
+			
+			System.out.println(System.getProperty("user.dir"));
+			readTextFile(name);
+			
+			
+		} else { // on load rien
+			System.out.print("entrez la taille du plateau k (dans la formule 3 * 2 ^ k) : ");
+			String k = scan.next();
+			
+			this.model.setNewK(Integer.parseInt(k));
+		}
+		
+		
+		
+		
+    }
+    
     private void parametreOfGame(int n){
         System.out.println("Le jeu commence !");
         System.out.println("Vous pouvez jouer en version Brave ou Téméraire que choisissez vous? (0/1)");
@@ -60,6 +110,8 @@ public class Game {
     private void to_string(){
         this.model.afficher();
     }
+    
+    
 
     public void playJvJ() {
         int playing = 0;
@@ -129,5 +181,49 @@ public class Game {
     private void setGloutonne(boolean g) {
     	this.isGloutonne = g;
     }
+    
+    public void readTextFile(String filename) throws IOException
+	{
+		String dir = System.getProperty("user.dir");
+		
+		File file = new File(dir + "\\" + filename);
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		String str;
+		str = reader.readLine();
+		
+		
+		int a = Integer.parseInt(str);
+		int b = 0;
+		while (a != 3)
+		{
+			a = a / 2;
+			b++;
+		}
+		
+		this.model.setNewK(b);
+		int ligne = 0;
+		
+		while ((str = reader.readLine()) != null)
+		{
+			for(int col = 0; col < str.length(); col++)
+			{
+				switch(str.charAt(col))
+				{
+				case 'R':
+					this.model.coloration(ligne, col, 2);
+				break;
+				case 'B':
+					this.model.coloration(ligne,  col,  1);
+				break;
+				default:
+				break;
+				}
+			}
+		ligne++;
+		}
+	}
+    
+    
     
 }
