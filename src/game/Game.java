@@ -13,7 +13,7 @@ public class Game {
     private int scoreRouge;
     private boolean isBrave;
     private boolean isGloutonne;
-    public static char blanc = 'A', bleu = 'B', rouge = 'R';
+    public static int blanc = 0, bleu = 1, rouge = 2;
 
     private Model model;
 
@@ -149,10 +149,8 @@ public class Game {
      * 
      * 
      * 
-     * 
-     */
-    
-    
+     * @param filename, le nom du fichier à lire
+     */    
     public void readTextFile(String filename) throws IOException
 	{
 		String dir = System.getProperty("user.dir");

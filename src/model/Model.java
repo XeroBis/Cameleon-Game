@@ -6,9 +6,9 @@ public class Model
 {
 	//******************** Attributs et Constructeurs de la classe Model ********************//
 	
-	private Plateau plateau;
-	private QuadTree QuadTree;
-	private int dim;
+	private Plateau plateau; // le plateau de jeu
+	private QuadTree QuadTree; // l'arbre pour les régions.
+	private int size;
 	
 	private ArrayList<Point> redPoints, bluePoints;
 	private int redScore, blueScore;
@@ -37,7 +37,7 @@ public class Model
 	{
 		this.plateau = new Plateau(k);
 		this.QuadTree = buildingQT(k, new Point(0,0));
-		this.dim = 3* (int) Math.pow(2, k);
+		this.size = 3* (int) Math.pow(2, k);
 	}
 	
 	private QuadTree buildingQT(int k, Point p)
@@ -69,7 +69,7 @@ public class Model
 	
 	public boolean colorationBrave(int ligne, int col, int couleur)
 	{
-		if (plateau.couleurCase(ligne, col) != 0 || ligne < 0 || ligne >= dim || col < 0 || col >= dim)
+		if (plateau.couleurCase(ligne, col) != 0 || ligne < 0 || ligne >= size || col < 0 || col >= size)
 		{
 			System.out.println("Mouvement Interdit !");
 			return false;
@@ -87,11 +87,11 @@ public class Model
 	{
 		for (int i = ligne - 1; i < ligne + 2; i++)
 		{
-			if (i >= 0 && i < this.dim)
+			if (i >= 0 && i < this.size)
 			{
 				for (int j = col - 1; j < col + 2; j++)
 				{
-					if(j >= 0 && j < this.dim && plateau.couleurCase(i, j) != 0)
+					if(j >= 0 && j < this.size && plateau.couleurCase(i, j) != 0)
 					{
 						coloration(i, j, couleur);
 					}
@@ -132,11 +132,11 @@ public class Model
 	{
 		for (int i = ligne - 1; i < ligne + 2; i++)
 		{
-			if (i >= 0 && i < this.dim)
+			if (i >= 0 && i < this.size)
 			{
 				for (int j = col - 1; j < col + 2; j++)
 				{
-					if((j >= 0) && (j < this.dim) && (plateau.couleurCase(i, j) != 0) && (isNotLock(i, j, this.QuadTree)))
+					if((j >= 0) && (j < this.size) && (plateau.couleurCase(i, j) != 0) && (isNotLock(i, j, this.QuadTree)))
 					{
 						coloration(i, j, couleur);
 					}
