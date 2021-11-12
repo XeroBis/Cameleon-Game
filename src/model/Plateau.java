@@ -9,7 +9,12 @@ public class Plateau
 	public static int blanc = 0,
 			          bleu  = 1,
 			          rouge = 2;
-	
+	/*
+	 * Constructeur de Plateau
+	 * 
+	 * 
+	 * @param k, le k qui permet de savoir la taille du plateau
+	 */
 	public Plateau(int k)
 	{
 		int dim = (int) (3 * Math.pow(2, k)); 
