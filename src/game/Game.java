@@ -118,8 +118,8 @@ public class Game {
 	private void to_string() {
 		this.model.afficher();
 	}
-	
-	private void endOfGameToString() {
+
+	private void endOfGame() {
 		System.out.println("Fin de la partie !");
 	}
 
@@ -136,27 +136,31 @@ public class Game {
 			int[] coord = chooseCoordinate();
 			boolean play = this.model.colorationBrave(coord[1], coord[0], bleu);
 			while (!play) {
-				System.out.println(
-						"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+				System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 				coord = chooseCoordinate();
 				play = this.model.colorationBrave(coord[1], coord[0], bleu);
 			}
-
-			this.to_string();
-			System.out.println("JOUEUR 2 : ");
-			coord = chooseCoordinate();
-			play = this.model.colorationBrave(coord[1], coord[0], rouge);
-			while (!play) {
-				System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+			if (this.model.estTerminee()) {
+				playing = false;
+			} else {
+				this.to_string();
+				System.out.println("JOUEUR 2 : ");
 				coord = chooseCoordinate();
 				play = this.model.colorationBrave(coord[1], coord[0], rouge);
+				while (!play) {
+					System.out.println(
+							"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+					coord = chooseCoordinate();
+					play = this.model.colorationBrave(coord[1], coord[0], rouge);
+				}
+				System.out.println("uncolored nb: " + this.model.getPlateau().uncolored_nb);
 			}
-			System.out.println("uncolored nb: " + this.model.getPlateau().uncolored_nb);
 			if (this.model.estTerminee()) {
 				playing = false;
 			}
 		}
 		scan.close();
+		this.endOfGame();
 
 	}
 
