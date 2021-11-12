@@ -223,7 +223,7 @@ public class Model {
 		}
 
 		plateau.changerValeur(ligne, col, couleur);
-		plateau.decrementerUncoloredNb();
+		//plateau.decrementerUncoloredNb();
 
 		switchingColors(ligne, col, couleur);
 	}

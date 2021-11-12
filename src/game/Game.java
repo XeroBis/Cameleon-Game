@@ -17,6 +17,7 @@ public class Game {
 
 	public Game() {
 	}
+
 	/*
 	 * fonction lançant une partie du jeu.
 	 */
@@ -25,10 +26,11 @@ public class Game {
 		this.parametreOfGame();
 		this.playJvJ();
 	}
-	
+
 	/*
-	 * fonction permettant le chargement d'un fichier txt afin de repmplir le plateau, on peut aussi décider de ne pas 
-	 * joindre de fichier et nous devrons dans ce cas donner un k
+	 * fonction permettant le chargement d'un fichier txt afin de repmplir le
+	 * plateau, on peut aussi décider de ne pas joindre de fichier et nous devrons
+	 * dans ce cas donner un k
 	 */
 	private void loadFiles() {
 		Scanner scan = new Scanner(System.in);
@@ -117,13 +119,17 @@ public class Game {
 		this.model.afficher();
 	}
 	
+	private void endOfGameToString() {
+		System.out.println("Fin de la partie !");
+	}
+
 	/*
 	 * fonction lançant une partie Joueur versus Joueur
 	 */
 	public void playJvJ() {
-		int playing = 0;
+		boolean playing = true;
 		Scanner scan = new Scanner(System.in);
-		while (playing == 0) {
+		while (playing) {
 			this.to_string();
 
 			System.out.println("JOUEUR 1 : ");
@@ -141,22 +147,33 @@ public class Game {
 			coord = chooseCoordinate();
 			play = this.model.colorationBrave(coord[1], coord[0], rouge);
 			while (!play) {
-				System.out.println(
-						"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+				System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 				coord = chooseCoordinate();
 				play = this.model.colorationBrave(coord[1], coord[0], rouge);
 			}
-
+			System.out.println("uncolored nb: " + this.model.getPlateau().uncolored_nb);
+			if (this.model.estTerminee()) {
+				playing = false;
+			}
 		}
 		scan.close();
 
 	}
 
-	void playIA() {
+	void playIAvJ() {
+		// TO-DO
+		// choisir qui commence
+	}
+
+	void plauIAvIA() {
+		// TO-DO
 
 	}
+
 	/*
-	 * fonction permettant le choix, par l'utilisateur des coordonnées de son prochain coup
+	 * fonction permettant le choix, par l'utilisateur des coordonnées de son
+	 * prochain coup
+	 * 
 	 * @return int[], le tableau contenant les 2 coordonnées choisie du joueur
 	 */
 	private int[] chooseCoordinate() {
@@ -165,15 +182,15 @@ public class Game {
 		System.out.print("Veuillez entrez un numero de colonne :");
 		res[0] = scan.nextInt();
 		while (res[0] > model.getSize() - 1 || res[0] < 0) {
-			System.out
-					.println("Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize() + " exclus.");
+			System.out.println(
+					"Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize() + " exclus.");
 			res[0] = scan.nextInt();
 		}
 		System.out.print("Veuillez entrez un numero de colonne :");
 		res[1] = scan.nextInt();
 		while (res[1] > model.getSize() - 1 || res[1] < 0) {
-			System.out.println(
-					"Veuillez indiquez un numéro de colonne ligne entre 0 et" + model.getSize() + " exclus.");
+			System.out
+					.println("Veuillez indiquez un numéro de colonne ligne entre 0 et" + model.getSize() + " exclus.");
 			res[1] = scan.nextInt();
 		}
 		System.out.println("Vous avez choisi le point en (" + res[0] + "," + res[1] + ")");
@@ -182,13 +199,16 @@ public class Game {
 
 	/*
 	 * Set le boolean Brave
+	 * 
 	 * @param brave, si la version du jeu est brave
 	 */
 	private void setBrave(boolean brave) {
 		isBrave = brave;
 	}
+
 	/*
-	 * fonction permettant de lire un fichier txt et de remplir notre plateau avec les données contenu dans ce fichier
+	 * fonction permettant de lire un fichier txt et de remplir notre plateau avec
+	 * les données contenu dans ce fichier
 	 */
 	public void readTextFile(String filename) throws IOException {
 		String dir = System.getProperty("user.dir");

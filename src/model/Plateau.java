@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Plateau 
 {
 	private ArrayList<ArrayList<Integer>> tableau;
-	private int uncolored_nb;
+	public int uncolored_nb;
 	public static int blanc = 0,
 			          bleu  = 1,
 			          rouge = 2;
