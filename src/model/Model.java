@@ -356,13 +356,24 @@ public class Model
 	
 	public void actualizingArrayPoints() 
 	{
+		Point p;
+		
 		for (int i = 0; i < redPoints.size(); i++)
 		{
-			
+			p = redPoints.get(i);
+			if ()
 		}
-		for (int i = 0; i < redPoints.size(); i++)
+		for (int i = 0; i < bluePoints.size(); i++)
 		{
-			
+			p = bluePoints.get(i);
+		}
+	}
+	
+	public void hasFreeNeighbord(int ligne, int col)
+	{
+		for(int i = -1; i < 2; i++)
+		{
+			for (int j = -1; int )
 		}
 	}
 }
