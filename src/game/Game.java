@@ -1,5 +1,9 @@
 package game;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 import model.Model;
@@ -135,5 +139,47 @@ public class Game {
     private void setGloutonne(boolean g) {
     	this.isGloutonne = g;
     }
+    
+    public void readTextFile(String filename) throws IOException
+	{
+		String dir = System.getProperty("user.dir");
+		
+		File file = new File(dir + "\\" + filename);
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		String str;
+		str = reader.readLine();
+		
+		
+		int a = Integer.parseInt(str);
+		int b = 0;
+		while (a != 3)
+		{
+			a = a / 2;
+			b++;
+		}
+		
+		test.setNewK(b);
+		int ligne = 0;
+		
+		while ((str = reader.readLine()) != null)
+		{
+			for(int col = 0; col < str.length(); col++)
+			{
+				switch(str.charAt(col))
+				{
+				case 'R':
+					test.coloration(ligne, col, 2);
+				break;
+				case 'B':
+					test.coloration(ligne,  col,  1);
+				break;
+				default:
+				break;
+				}
+			}
+		ligne++;
+		}
+	}
     
 }
