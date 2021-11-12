@@ -32,11 +32,11 @@ public class Game {
         if (version == 0){
             System.out.println("Vous avez donc choisi la version Brave !");
             this.setBrave(true);
-            this.setModel(new Model(n, true));
+            this.setModel(new Model(n, true, true));
         } else {
             System.out.println("Vous avez donc choisi la version Téméraire !");
             this.setBrave(false);
-            this.setModel(new Model(n, false));
+            this.setModel(new Model(n, false, true));
         }
         System.out.println("L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
         int versionIA = -1;

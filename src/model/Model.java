@@ -4,29 +4,43 @@ public class Model {
 
 	private Plateau plateau;
 	private QuadTree quadTree;
+	private Tree tree;
 	int scoreBleu;
 	int scoreRouge;
 	public static char blanc = 'A', bleu = 'B', rouge = 'R';
 	boolean isBrave;
 	private int side;
+	boolean isTree;
 
-	public Model(int n, boolean isBrave) {
+	public Model(int n, boolean isBrave, boolean isTree) {
 		this.scoreBleu = 0;
 		this.scoreRouge = 0;
 		this.isBrave = isBrave;
 		this.plateau = new Plateau(n);
-		if (!isBrave) {
-			this.quadTree = new QuadTree(n);
+		if (isTree) {
+			this.tree = new Tree(n);
+			this.tree = tree.createFamily(null, n);
+			this.side = this.tree.getSide();
+			this.isTree = isTree;
+		} else {
+			if (!isBrave) {
+				this.quadTree = new QuadTree(n);
+			}
+			this.side = this.plateau.getTaille();
 		}
-		this.side = this.plateau.getTaille();
 	}
 
 	public int[] changeValue(char color, int x, int y) {
-		if (this.isBrave) {
-			return changeValueBrave(color, x, y);
-		} else {
-			return changeValueTemeraire(color, x, y);
+		if(this.isTree) {
+			return this.tree.changeValue(tree, color, x, y, this.isBrave);
+		}else {
+			if (this.isBrave) {
+				return changeValueBrave(color, x, y);
+			} else {
+				return changeValueTemeraire(color, x, y);
+			}
 		}
+		
 	}
 
 	public int[] changeValueBrave(char color, int x, int y) {
@@ -108,10 +122,10 @@ public class Model {
 					if (j >= 0 && j < this.getSide()) {
 						if (i != x || j != y) {
 							if (!this.isBrave) {
-								//System.out.print("peut ajouteer" + this.quadTree.addValue(i, j, true));
+								// System.out.print("peut ajouteer" + this.quadTree.addValue(i, j, true));
 								if (this.quadTree.addValue(i, j, true) == 0) {
-									if(this.quadTree.getisFull()) {
-										
+									if (this.quadTree.getisFull()) {
+
 									}
 									colors[indice] = this.plateau.getValue(i, j);
 								}
