@@ -140,6 +140,19 @@ public class Game {
     	this.isGloutonne = g;
     }
     
+    
+    
+    /*
+     * 
+     * fonction qui sert à lire un fichier text et créer le plateau correspondant
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+    
+    
     public void readTextFile(String filename) throws IOException
 	{
 		String dir = System.getProperty("user.dir");
