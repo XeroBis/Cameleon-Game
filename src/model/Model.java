@@ -362,23 +362,34 @@ public class Model
 	public void actualizingArrayPoints() 
 	{
 		Point p;
-		int[] removePoints;
+		ArrayList<Integer> removePoints = new ArrayList<Integer>();
 		for (int i = redPoints.size() - 1; i >= 0; i--)
 		{
 			p = redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()))
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 2)
 			{
-				
+				removePoints.add(i);
 			}
 		}
+		for (int i = 0; i < removePoints.size(); i++)
+		{
+			redPoints.remove(removePoints.get(i));
+		}
+		removePoints.clear();
+		
 		for (int i = bluePoints.size() - 1; i >= 0; i--)
 		{
 			p = bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()))
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 1)
 			{
-				
+				removePoints.add(i);
 			}
 		}
+		for (int i = 0; i < removePoints.size(); i++)
+		{
+			redPoints.remove(removePoints.get(i));
+		}
+		removePoints.clear();
 	}
 	
 	public boolean hasFreeNeighbor(int ligne, int col)
