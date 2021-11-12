@@ -349,4 +349,16 @@ public class Model
 	{
 		System.out.println("rouge : " + redScore + "; bleu : " + blueScore);
 	}
+	
+	public void actualizingArrayPoints() 
+	{
+		for (int i = 0; i < redPoints.size(); i++)
+		{
+			
+		}
+		for (int i = 0; i < redPoints.size(); i++)
+		{
+			
+		}
+	}
 }
