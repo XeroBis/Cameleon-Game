@@ -331,6 +331,7 @@ public class Model
 	
 	public void afficher()
 	{
+		this.afficherScores();
 		this.plateau.afficherPlateau();
 	}
 	
@@ -347,6 +348,10 @@ public class Model
 	public Plateau getPlateau()
 	{
 		return this.plateau;
+	}
+	
+	public int getSize() {
+		return this.size;
 	}
 	
 	public void afficherScores()

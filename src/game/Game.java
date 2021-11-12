@@ -9,8 +9,6 @@ import java.util.Scanner;
 import model.Model;
 
 public class Game {
-    private int scoreBleu;
-    private int scoreRouge;
     private boolean isBrave;
     private boolean isGloutonne;
     public static int blanc = 0, bleu = 1, rouge = 2;
@@ -18,8 +16,6 @@ public class Game {
     private Model model;
 
     public Game(int n){
-        this.scoreBleu = 0;
-        this.scoreRouge = 0;
         parametreOfGame(n);
     }
 
@@ -36,12 +32,13 @@ public class Game {
         if (version == 0){
             System.out.println("Vous avez donc choisi la version Brave !");
             this.setBrave(true);
-            this.setModel(new Model(n, true, true));
+            this.setModel(new Model(n));
         } else {
             System.out.println("Vous avez donc choisi la version Téméraire !");
             this.setBrave(false);
-            this.setModel(new Model(n, false, true));
+            this.setModel(new Model(n));
         }
+        /*
         System.out.println("L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
         int versionIA = -1;
         while(versionIA != 0 && versionIA != 1) {
@@ -55,17 +52,16 @@ public class Game {
             System.out.println("Vous avez donc choisi la version Intelligente !");
             this.setGloutonne(false);
         }
+        */
         
         //scan.close();
     }
 
     private void to_string(){
-        System.out.println("SCORE :");
-        System.out.println("bleu : " + scoreBleu + " , rouge : " + scoreRouge);
-        this.model.to_string();
+        this.model.afficher();
     }
 
-    public void play() {
+    public void playJvJ() {
         int playing = 0;
         Scanner scan = new Scanner(System.in);
         while(playing==0){
@@ -73,26 +69,14 @@ public class Game {
 
             System.out.println("JOUEUR 1 : ");
             int[] coord = chooseCoordinate();
-            int[] res = model.changeValue(rouge,coord[0],coord[1]);
-            while(res[0]!= 0){
+            boolean play = this.model.colorationBrave(rouge, coord[1], coord[0]);
+            while(!play){
                 System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
                 coord = chooseCoordinate();
-                res = model.changeValue(rouge,coord[0],coord[1]);
+                play = this.model.colorationBrave(rouge,coord[0],coord[1]);
             }
             //System.out.println("score en plus : "+res[2]);
 
-            changeScore(res[1], res[2]);
-
-            System.out.println("Tour de L'IA: ");
-            if(this.isGloutonne){
-
-                int[] coordIA = this.model.IAGlouton();
-                System.out.println("coord IA " + coordIA[0]+ ", " +coordIA[1]);
-
-                int[] resIA = this.model.changeValue(bleu, coordIA[0], coordIA[1]);
-                changeScore(resIA[1], resIA[2]);
-
-            } 
         }
         scan.close();
 
@@ -107,13 +91,13 @@ public class Game {
         Scanner scan = new Scanner(System.in);
         System.out.print("Veuillez entrez un numero de ligne :");
         res[0] = scan.nextInt();
-        while(res[0] > model.getSide()-1 || res[0] < 0){
+        while(res[0] > model.getSize()-1 || res[0] < 0){
             System.out.println("Veuillez indiquez un numéro de ligne compris entre 0 et" + model.getSide()+ " exclus.");
             res[0] = scan.nextInt();
         }
         System.out.print("Veuillez entrez un numero de colonne :");
         res[1] = scan.nextInt();
-        while(res[1] > model.getSide()-1 || res[1] < 0){
+        while(res[1] > model.getSize()-1 || res[1] < 0){
             System.out.println("Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSide()+ " exclus.");
             res[1] = scan.nextInt();
         }
@@ -139,58 +123,5 @@ public class Game {
     private void setGloutonne(boolean g) {
     	this.isGloutonne = g;
     }
-    
-    
-    
-    /*
-     * 
-     * fonction qui sert à lire un fichier text et créer le plateau correspondant
-     * 
-     * 
-     * 
-     * 
-     * @param filename, le nom du fichier à lire
-     */    
-    public void readTextFile(String filename) throws IOException
-	{
-		String dir = System.getProperty("user.dir");
-		
-		File file = new File(dir + "\\" + filename);
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		
-		String str;
-		str = reader.readLine();
-		
-		
-		int a = Integer.parseInt(str);
-		int b = 0;
-		while (a != 3)
-		{
-			a = a / 2;
-			b++;
-		}
-		
-		test.setNewK(b);
-		int ligne = 0;
-		
-		while ((str = reader.readLine()) != null)
-		{
-			for(int col = 0; col < str.length(); col++)
-			{
-				switch(str.charAt(col))
-				{
-				case 'R':
-					test.coloration(ligne, col, 2);
-				break;
-				case 'B':
-					test.coloration(ligne,  col,  1);
-				break;
-				default:
-				break;
-				}
-			}
-		ligne++;
-		}
-	}
     
 }
