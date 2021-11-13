@@ -266,6 +266,7 @@ public class Model {
 		System.out.println("rouge : " + redScore + "; bleu : " + blueScore);
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	public void actualizingArrayPoints() {
 		Point p;
 		ArrayList<Integer> removePoints = new ArrayList<Integer>();
