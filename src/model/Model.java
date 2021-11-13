@@ -55,8 +55,7 @@ public class Model {
 		}
 	}
 
-	// ******************** Fonctions pour le mode de jeu "Brave"
-	// ********************//
+	// ******************** Fonctions pour le mode de jeu "Brave" ********************//
 
 	public boolean colorationBrave(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0 || ligne < 0 || ligne >= size || col < 0 || col >= size) {
@@ -82,8 +81,7 @@ public class Model {
 		}
 	}
 
-	// ******************** Fonctions pour le mode de jeu "Téméraire"
-	// ********************//
+	// ******************** Fonctions pour le mode de jeu "Téméraire" ********************//
 
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0) {
