@@ -4,16 +4,10 @@ import java.util.ArrayList;
 
 public class Plateau {
 	private ArrayList<ArrayList<Integer>> tableau;
-<<<<<<< Updated upstream
-	public int uncolored_nb;
-	public static int blanc = 0,
-			          bleu  = 1,
-			          rouge = 2;
-=======
 	private int uncolored_nb;
 	public static int blanc = 0, bleu = 1, rouge = 2;
 
->>>>>>> Stashed changes
+
 	/*
 	 * Constructeur de Plateau
 	 * 
