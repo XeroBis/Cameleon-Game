@@ -55,7 +55,8 @@ public class Model {
 		}
 	}
 
-	// ******************** Fonctions pour le mode de jeu "Brave" ********************//
+	// ******************** Fonctions pour le mode de jeu "Brave"
+	// ********************//
 
 	public boolean colorationBrave(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0 || ligne < 0 || ligne >= size || col < 0 || col >= size) {
@@ -81,7 +82,12 @@ public class Model {
 		}
 	}
 
-	// ******************** Fonctions pour le mode de jeu "Téméraire" ********************//
+	public void botBraveRedPoint() {
+		
+	}
+
+	// ******************** Fonctions pour le mode de jeu "Téméraire"
+	// ********************//
 
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0) {
@@ -221,7 +227,7 @@ public class Model {
 		}
 
 		plateau.changerValeur(ligne, col, couleur);
-		//plateau.decrementerUncoloredNb();
+		// plateau.decrementerUncoloredNb();
 
 		switchingColors(ligne, col, couleur);
 	}
@@ -302,5 +308,17 @@ public class Model {
 			}
 		}
 		return false;
+	}
+
+	public int nbOpponentColor(int ligne, int col, int couleur) {
+		int nb = 0;
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if ((plateau.couleurCase(ligne + i, col + j) != couleur) && (plateau.couleurCase(ligne + i, col + j) != 0)) {
+					nb++;
+				}
+			}
+		}
+		return nb;
 	}
 }
