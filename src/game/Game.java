@@ -153,7 +153,7 @@ public class Game {
 					coord = chooseCoordinate();
 					play = this.model.colorationBrave(coord[1], coord[0], rouge);
 				}
-				System.out.println("uncolored nb: " + this.model.getPlateau().uncolored_nb);
+				System.out.println("uncolored nb: " + this.model.getPlateau().getUncolored_nb());
 			}
 			if (this.model.estTerminee()) {
 				playing = false;

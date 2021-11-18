@@ -52,10 +52,14 @@ public class Plateau {
 	}
 
 	public void decrementerUncoloredNb() {
-		this.uncolored_nb = uncolored_nb - 1;
+		this.uncolored_nb = getUncolored_nb() - 1;
 	}
 
 	public boolean estEntierementColorie() {
-		return uncolored_nb == 0;
+		return getUncolored_nb() == 0;
+	}
+
+	public int getUncolored_nb() {
+		return uncolored_nb;
 	}
 }
