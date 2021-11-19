@@ -96,6 +96,8 @@ public class Model {
 						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, Plateau.rouge);
 						if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
 							mvp.clear();
+							max = nb;
+							System.out.println("max = " + max + " ; colonne : " + (p.getx() + j) + " ; ligne : " + (p.gety() + i));
 							mvp.add(new Point(p.getx() + j, p.gety() + i));
 						}
 						else if (nb == max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
