@@ -48,7 +48,12 @@ public class Plateau {
 	}
 
 	public int couleurCase(int ligne, int col) {
-		return this.tableau.get(ligne).get(col);
+		if ((ligne < 0) && (ligne  > tableau.size()) && (col < 0) && (col > tableau.size())) {
+			return -1;
+		}
+		else {
+			return this.tableau.get(ligne).get(col);
+		}
 	}
 
 	public void decrementerUncoloredNb() {
