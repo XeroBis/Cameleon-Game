@@ -7,7 +7,7 @@ public class Model {
 	// ********************//
 
 	private Plateau plateau; // le plateau de jeu.
-	private QuadTree QuadTree; // l'arbre pour les régions.
+	private QuadTree quadTree; // l'arbre pour les régions.
 	private int size; // la taille du coté.
 
 	private ArrayList<Point> redPoints, bluePoints; // 2 tableau qui contiennent les points qui peuvent être pris.
@@ -36,7 +36,7 @@ public class Model {
 
 	public void setNewK(int k) {
 		this.plateau = new Plateau(k);
-		this.QuadTree = buildingQT(k, new Point(0, 0));
+		this.quadTree = buildingQT(k, new Point(0, 0));
 		this.size = 3 * (int) Math.pow(2, k);
 	}
 
@@ -125,7 +125,7 @@ public class Model {
 
 			if (isSmallRegionFull(p.gety(), p.getx())) {
 				recoloringSmallRegion(p.gety(), p.getx(), couleur);
-				acquiringRegion(p.gety(), p.getx(), couleur, this.QuadTree);
+				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 			}
 		}
 		return true;
@@ -135,7 +135,7 @@ public class Model {
 		for (int i = ligne - 1; i < ligne + 2; i++) {
 			if (i >= 0 && i < this.size) {
 				for (int j = col - 1; j < col + 2; j++) {
-					if ((j >= 0) && (j < this.size) && (plateau.couleurCase(i, j) != 0) && (isNotLock(i, j, this.QuadTree))) {
+					if ((j >= 0) && (j < this.size) && (plateau.couleurCase(i, j) != 0) && (isNotLock(i, j, this.quadTree))) {
 						coloration(i, j, couleur);
 					}
 				}
@@ -244,7 +244,7 @@ public class Model {
 
 		if (isSmallRegionFull(p.gety(), p.getx())) {
 			recoloringSmallRegion(p.gety(), p.getx(), couleur);
-			acquiringRegion(p.gety(), p.getx(), couleur, this.QuadTree);
+			acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 		}
 	}
 	
@@ -292,7 +292,7 @@ public class Model {
 	}
 
 	public void afficherQT() {
-		this.QuadTree.printValuePoint();
+		this.quadTree.printValuePoint();
 	}
 
 	public boolean estTerminee() {
