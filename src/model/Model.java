@@ -92,13 +92,15 @@ public class Model {
 			p = bluePoints.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
-					int nb = nbOpponentColor(p.gety() + i, p.getx() + j, Plateau.rouge);
-					if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
-						mvp.clear();
-						mvp.add(new Point(p.getx() + j, p.gety() + i));
-					}
-					else if (nb == max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
-						mvp.add(new Point(p.getx() + j, p.gety() + i));
+					if (i != 0 || j != 0) {
+						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, Plateau.rouge);
+						if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
+							mvp.clear();
+							mvp.add(new Point(p.getx() + j, p.gety() + i));
+						}
+						else if (nb == max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
+							mvp.add(new Point(p.getx() + j, p.gety() + i));
+						}
 					}
 				}
 			}
