@@ -22,15 +22,21 @@ public class Game {
 	/*
 	 * fonction lançant une partie du jeu.
 	 */
-	public void play() {
+	public void play(boolean test) {
 		this.loadFiles();
-		this.parametreOfGame();
+		if(test) {
+			this.fastParamBrave();
+		} else {
+			this.parametreOfGame();
+		}
 		if (playWithIa) {
 			this.playIAvJ();
 		} else {
 			this.playJvJ();
 		}
 	}
+	
+	
 
 	/*
 	 * fonction permettant le chargement d'un fichier txt afin de repmplir le
@@ -83,6 +89,12 @@ public class Game {
 
 	}
 
+	private void fastParamBrave() {
+		this.isBrave = true;
+		this.isGloutonne = true;
+		this.playWithIa = true;
+	}
+	
 	/*
 	 * fonction nous permettant de parametrer tout les parametres pour une partie
 	 * càd, la version du jeu, la version de l'ia

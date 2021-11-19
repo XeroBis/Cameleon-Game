@@ -48,7 +48,7 @@ public class Plateau {
 	}
 
 	public int couleurCase(int ligne, int col) {
-		if ((ligne < 0) && (ligne  > tableau.size()) && (col < 0) && (col > tableau.size())) {
+		if ((ligne < 0) || (ligne  >= tableau.size()) || (col < 0) || (col >= tableau.size())) {
 			return -1;
 		}
 		else {
