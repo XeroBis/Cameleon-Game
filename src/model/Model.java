@@ -83,6 +83,8 @@ public class Model {
 	}
 
 	public void botBraveRedPoint() {
+		actualizingArrayPoints();
+		
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
@@ -103,6 +105,7 @@ public class Model {
 		}
 		p = mvp.get((int) (Math.random() * mvp.size()));
 		colorationBrave(p.gety(), p.getx(), Plateau.rouge);
+		actualizingArrayPoints();
 	}
 
 	// ******************** Fonctions pour le mode de jeu "Téméraire"
