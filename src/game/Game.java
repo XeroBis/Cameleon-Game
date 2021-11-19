@@ -146,17 +146,18 @@ public class Game {
 				this.to_string();
 				System.out.println("JOUEUR 2 : ");
 				coord = chooseCoordinate();
-				play = this.model.colorationBrave(coord[1], coord[0], rouge);
+				play = this.playMove(coord[1], coord[0], rouge);
 				while (!play) {
 					System.out.println(
 							"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 					coord = chooseCoordinate();
-					play = this.model.colorationBrave(coord[1], coord[0], rouge);
+					play = this.playMove(coord[1], coord[0], rouge);
 				}
 				System.out.println("uncolored nb: " + this.model.getPlateau().getUncolored_nb());
 			}
 			if (this.model.estTerminee()) {
 				playing = false;
+				this.to_string();
 			}
 		}
 		scan.close();
@@ -172,6 +173,14 @@ public class Game {
 	void plauIAvIA() {
 		// TO-DO
 
+	}
+	
+	public boolean playMove(int i, int j, int couleur) {
+		if(this.isBrave) {
+			return this.model.colorationBrave(i, j, couleur);
+		} else {
+			return this.model.colorationTemeraire(i,j, couleur);
+		}
 	}
 
 	/*
@@ -237,10 +246,10 @@ public class Game {
 			for (int col = 0; col < str.length(); col++) {
 				switch (str.charAt(col)) {
 				case 'R':
-					this.model.coloration(ligne, col, 2);
+					this.model.RemplirTableau(ligne, col, 2);
 					break;
 				case 'B':
-					this.model.coloration(ligne, col, 1);
+					this.model.RemplirTableau(ligne, col, 1);
 					break;
 				default:
 					break;
