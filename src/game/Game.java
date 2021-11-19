@@ -190,15 +190,12 @@ public class Game {
 	}
 
 	public void playIAvJ() {
-		// TO-DO
-		// choisir qui commence
-
 		boolean playing = true;
 		Scanner scan = new Scanner(System.in);
 		this.to_string();
 		while (playing) {
 			
-			System.out.println("JOUEUR : ");
+			System.out.println("Tour du Joueur : ");
 			int[] coord = chooseCoordinate();
 			boolean play = this.playMove(coord[1], coord[0], bleu);
 			while (!play) {
@@ -211,13 +208,14 @@ public class Game {
 			}
 			this.to_string();
 
-			System.out.println("IA : ");
+			System.out.println("Tour de l'IA : ");
 			this.model.botBraveRedPoint();
 			this.to_string();
 			if (this.model.estTerminee()) {
 				playing = false;
 			}
 		}
+		this.to_string();
 	}
 
 	void plauIAvIA() {
@@ -261,7 +259,7 @@ public class Game {
 	}
 
 	/*
-	 * Set le boolean Brave
+	 * change la valeur du boolean Brave
 	 * 
 	 * @param brave, si la version du jeu est brave
 	 */
