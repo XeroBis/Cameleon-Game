@@ -11,6 +11,7 @@ import model.Model;
 public class Game {
 	private boolean isBrave;
 	private boolean isGloutonne;
+	private boolean playWithIa;
 	public static int blanc = 0, bleu = 1, rouge = 2; // si en jvj, bleu = joueur 1 et rouge = joueur 2
 
 	private Model model;
@@ -24,7 +25,11 @@ public class Game {
 	public void play() {
 		this.loadFiles();
 		this.parametreOfGame();
-		this.playJvJ();
+		if (playWithIa) {
+			this.playIAvJ();
+		} else {
+			this.playJvJ();
+		}
 	}
 
 	/*
@@ -99,17 +104,35 @@ public class Game {
 			System.out.println("Vous avez donc choisi la version Téméraire !");
 			this.setBrave(false);
 		}
-		/*
-		 * System.out.
-		 * println("L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)"
-		 * ); int versionIA = -1; while(versionIA != 0 && versionIA != 1) { System.out.
-		 * print("Veuillez entrez la valeur 0 pour la version Gloutonne et 1 pour la version Intelligente."
-		 * ); versionIA = scan.nextInt(); } if (versionIA== 0){
-		 * System.out.println("Vous avez donc choisi la version Gloutonne !");
-		 * this.setGloutonne(true); } else {
-		 * System.out.println("Vous avez donc choisi la version Intelligente !");
-		 * this.setGloutonne(false); }
-		 */
+
+		int ia = 0;
+		System.out.println("Voulez-vous jouer avec une ia? 0 pour non, 1 pour oui");
+		ia = scan.nextInt();
+		if (ia == 1) {
+			this.playWithIa = true;
+			System.out.println(
+					"L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
+			int versionIA = -1;
+			while (versionIA != 0 && versionIA != 1) {
+				System.out.print(
+						"Veuillez entrez la valeur 0 pour la version Gloutonne et 1 pour la version Intelligente.");
+				versionIA = scan.nextInt();
+			}
+			if (versionIA == 0) {
+				System.out.println("Vous avez donc choisi la version Gloutonne !");
+				this.setGloutonne(true);
+			} else {
+				System.out.println("Vous avez donc choisi la version Intelligente !");
+				this.setGloutonne(false);
+			}
+		} else {
+			this.playWithIa = false;
+		}
+
+	}
+
+	private void setGloutonne(boolean b) {
+		this.isGloutonne = b;
 	}
 
 	/*
@@ -136,7 +159,8 @@ public class Game {
 			int[] coord = chooseCoordinate();
 			boolean play = this.model.colorationBrave(coord[1], coord[0], bleu);
 			while (!play) {
-				System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+				System.out.println(
+						"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 				coord = chooseCoordinate();
 				play = this.model.colorationBrave(coord[1], coord[0], bleu);
 			}
@@ -165,21 +189,47 @@ public class Game {
 
 	}
 
-	void playIAvJ() {
+	public void playIAvJ() {
 		// TO-DO
 		// choisir qui commence
+
+		boolean playing = true;
+		Scanner scan = new Scanner(System.in);
+		this.to_string();
+		while (playing) {
+			
+			System.out.println("JOUEUR : ");
+			int[] coord = chooseCoordinate();
+			boolean play = this.playMove(coord[1], coord[0], bleu);
+			while (!play) {
+				System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+				coord = chooseCoordinate();
+				play = this.playMove(coord[1], coord[0], bleu);
+			}
+			if (this.model.estTerminee()) {
+				playing = false;
+			}
+			this.to_string();
+
+			System.out.println("IA : ");
+			this.model.botBraveRedPoint();
+			this.to_string();
+			if (this.model.estTerminee()) {
+				playing = false;
+			}
+		}
 	}
 
 	void plauIAvIA() {
 		// TO-DO
 
 	}
-	
+
 	public boolean playMove(int i, int j, int couleur) {
-		if(this.isBrave) {
+		if (this.isBrave) {
 			return this.model.colorationBrave(i, j, couleur);
 		} else {
-			return this.model.colorationTemeraire(i,j, couleur);
+			return this.model.colorationTemeraire(i, j, couleur);
 		}
 	}
 
@@ -199,11 +249,11 @@ public class Game {
 					"Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize() + " exclus.");
 			res[0] = scan.nextInt();
 		}
-		System.out.print("Veuillez entrez un numero de colonne :");
+		System.out.print("Veuillez entrez un numero de ligne :");
 		res[1] = scan.nextInt();
 		while (res[1] > model.getSize() - 1 || res[1] < 0) {
 			System.out
-					.println("Veuillez indiquez un numéro de colonne ligne entre 0 et" + model.getSize() + " exclus.");
+					.println("Veuillez indiquez un numéro de ligne entre 0 et" + model.getSize() + " exclus.");
 			res[1] = scan.nextInt();
 		}
 		System.out.println("Vous avez choisi le point en (" + res[0] + "," + res[1] + ")");
