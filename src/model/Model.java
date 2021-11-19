@@ -111,8 +111,7 @@ public class Model {
 		for (int i = ligne - 1; i < ligne + 2; i++) {
 			if (i >= 0 && i < this.size) {
 				for (int j = col - 1; j < col + 2; j++) {
-					if ((j >= 0) && (j < this.size) && (plateau.couleurCase(i, j) != 0)
-							&& (isNotLock(i, j, this.QuadTree))) {
+					if ((j >= 0) && (j < this.size) && (plateau.couleurCase(i, j) != 0) && (isNotLock(i, j, this.QuadTree))) {
 						coloration(i, j, couleur);
 					}
 				}
@@ -210,6 +209,22 @@ public class Model {
 
 	// ******************** Fonctions générales ********************//
 
+	
+	public void RemplirTableau(int ligne, int col, int couleur) {
+		this.colorationQuadTree(ligne, col, couleur);
+		this.coloration(ligne, col, couleur);
+	}
+	
+	public void colorationQuadTree(int ligne, int col, int couleur) {
+		Point p = getSmallRegionTopLeft(ligne, col);
+
+		if (isSmallRegionFull(p.gety(), p.getx())) {
+			recoloringSmallRegion(p.gety(), p.getx(), couleur);
+			acquiringRegion(p.gety(), p.getx(), couleur, this.QuadTree);
+		}
+	}
+	
+	
 	public void coloration(int ligne, int col, int couleur) {
 		if (couleur == 1 && plateau.couleurCase(ligne, col) == 2) {
 			this.redScore--;
