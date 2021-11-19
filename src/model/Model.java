@@ -83,7 +83,26 @@ public class Model {
 	}
 
 	public void botBraveRedPoint() {
-		
+		ArrayList<Point> mvp = new ArrayList<Point>();
+		Point p = null;
+		int max = 0;
+		for (int k = 0; k < bluePoints.size(); k++) {
+			p = bluePoints.get(k);
+			for (int i = -1; i < 2; i++) {
+				for (int j = -1; j < 2; j++) {
+					int nb = nbOpponentColor(p.gety() + i, p.getx() + j, Plateau.rouge);
+					if(nb > max) {
+						mvp.clear();
+						mvp.add(new Point(p.getx() + j, p.gety() + i));
+					}
+					else if (nb == max) {
+						mvp.add(new Point(p.getx() + j, p.gety() + i));
+					}
+				}
+			}
+		}
+		p = mvp.get((int) (Math.random() * mvp.size()));
+		colorationBrave(p.gety(), p.getx(), Plateau.rouge);
 	}
 
 	// ******************** Fonctions pour le mode de jeu "Téméraire"
@@ -314,7 +333,9 @@ public class Model {
 		int nb = 0;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
-				if ((plateau.couleurCase(ligne + i, col + j) != couleur) && (plateau.couleurCase(ligne + i, col + j) != 0)) {
+				if ((ligne + i >= 0) && (ligne + i < size) && (col + j >= 0) && (col + j < size)
+						&& (plateau.couleurCase(ligne + i, col + j) != couleur)
+						&& (plateau.couleurCase(ligne + i, col + j) != 0)) {
 					nb++;
 				}
 			}
