@@ -11,7 +11,6 @@ public class Plateau {
 	/*
 	 * Constructeur de Plateau
 	 * 
-	 * 
 	 * @param k, le k qui permet de savoir la taille du plateau
 	 */
 	public Plateau(int k) {
