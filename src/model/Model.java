@@ -81,7 +81,7 @@ public class Model {
 		}
 	}
 
-	public void botBraveRedPoint(int color) {
+	public void botBraveGlouton(int color) {
 		actualizingArrayPoints();
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
@@ -103,7 +103,6 @@ public class Model {
 						if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
 							mvp.clear();
 							max = nb;
-							System.out.println("max = " + max + " ; colonne : " + (p.getx() + j) + " ; ligne : " + (p.gety() + i));
 							mvp.add(new Point(p.getx() + j, p.gety() + i));
 						}
 						else if (nb == max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
@@ -121,12 +120,11 @@ public class Model {
 		colorationBrave(p.gety(), p.getx(), color);
 		actualizingArrayPoints();
 	}
+
 	
 	// ******************** Fonctions pour le mode de jeu "Téméraire"
 	// ********************//
 
-	// ******************** Fonctions pour le mode de jeu "Brave"
-	// ********************//
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0) {
 			System.out.println("Mouvement Interdit !");

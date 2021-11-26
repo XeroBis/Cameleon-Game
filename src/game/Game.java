@@ -206,6 +206,9 @@ public class Game {
 
 	}
 
+	/*
+	 * Fonction permettant à un joueur de jouer contre une IA 
+	 */
 	public void playIAvJ() {
 		boolean playing = true;
 		Scanner scan = new Scanner(System.in);
@@ -226,7 +229,7 @@ public class Game {
 			this.to_string();
 
 			System.out.println("Tour de l'IA : ");
-			this.model.botBraveRedPoint(2);
+			this.model.botBraveGlouton(2);
 			this.to_string();
 			if (this.model.estTerminee()) {
 				playing = false;
@@ -240,19 +243,20 @@ public class Game {
 		boolean playing = true;
 		while(playing) {
 			System.out.println("Tour de l'IA 1 : ");
-			this.model.botBraveRedPoint(1);
+			this.model.botBraveGlouton(1);
 			this.to_string();
 			if (this.model.estTerminee()) {
 				playing = false;
 			}
 			
 			System.out.println("Tour de l'IA 2 : ");
-			this.model.botBraveRedPoint(2);
+			this.model.botBraveGlouton(2);
 			this.to_string();
 			if (this.model.estTerminee()) {
 				playing = false;
 			}
 		}
+		this.to_string();
 
 	}
 
