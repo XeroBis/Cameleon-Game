@@ -84,6 +84,7 @@ public class Model {
 
 	public void botBraveRedPoint(int color) {
 		actualizingArrayPoints();
+		ArrayList<Point> attack;
 		
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
@@ -247,6 +248,10 @@ public class Model {
 			}
 		}
 	}
+	
+	public void botTemeraireRedPoint() {
+		
+	}
 
 	// ******************** Fonctions générales ********************//
 
@@ -264,7 +269,6 @@ public class Model {
 			acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 		}
 	}
-	
 	
 	public void coloration(int ligne, int col, int couleur) {
 		if (couleur == 1 && plateau.couleurCase(ligne, col) == 2) {
