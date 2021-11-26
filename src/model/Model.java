@@ -82,18 +82,29 @@ public class Model {
 		}
 	}
 
-	public void botBraveRedPoint() {
+	public void botBraveRedPoint(int color) {
 		actualizingArrayPoints();
 		
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
-		for (int k = 0; k < bluePoints.size(); k++) {
-			p = bluePoints.get(k);
+		ArrayList<Point> Points;
+		int colorOpponent;
+		if(color == 1) {
+			colorOpponent = 2;
+			Points = this.bluePoints;
+		} else {
+			colorOpponent = 1;
+			Points = this.redPoints;
+		}
+		 
+		
+		for (int k = 0; k < Points.size(); k++) {
+			p = Points.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
-						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, Plateau.rouge);
+						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, colorOpponent);
 						if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
 							mvp.clear();
 							max = nb;
@@ -107,7 +118,11 @@ public class Model {
 				}
 			}
 		}
-		p = mvp.get((int) (Math.random() * mvp.size()));
+		if(mvp.isEmpty()) {
+			p = new Point((int) (Math.random() * this.size),(int) (Math.random() * this.size));
+		} else {
+			p = mvp.get((int) (Math.random() * mvp.size()));
+		}
 		colorationBrave(p.gety(), p.getx(), Plateau.rouge);
 		actualizingArrayPoints();
 	}

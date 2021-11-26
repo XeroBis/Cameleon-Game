@@ -11,7 +11,8 @@ import model.Model;
 public class Game {
 	private boolean isBrave;
 	private boolean isGloutonne;
-	private boolean playWithIa;
+	public static int JvJ = 0, JvIA = 1, IAvIA = 2;
+	private int variant;
 	public static int blanc = 0, bleu = 1, rouge = 2; // si en jvj, bleu = joueur 1 et rouge = joueur 2
 
 	private Model model;
@@ -29,10 +30,12 @@ public class Game {
 		} else {
 			this.parametreOfGame();
 		}
-		if (playWithIa) {
+		if (this.variant == JvIA) {
 			this.playIAvJ();
-		} else {
+		} else if (this.variant == JvJ) {
 			this.playJvJ();
+		} else if(this.variant == IAvIA) {
+			this.plauIAvIA();
 		}
 	}
 	
@@ -92,7 +95,7 @@ public class Game {
 	private void fastParamBrave() {
 		this.isBrave = true;
 		this.isGloutonne = true;
-		this.playWithIa = true;
+		this.variant = IAvIA; // IA
 	}
 	
 	/*
@@ -118,10 +121,10 @@ public class Game {
 		}
 
 		int ia = 0;
-		System.out.println("Voulez-vous jouer avec une ia? 0 pour non, 1 pour oui");
+		System.out.println("Voulez-vous jouer avec un joueur? 0, contre une IA? 1, ou laisser deux IA jouer? 2");
 		ia = scan.nextInt();
 		if (ia == 1) {
-			this.playWithIa = true;
+			this.variant = this.JvIA;
 			System.out.println(
 					"L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
 			int versionIA = -1;
@@ -137,8 +140,10 @@ public class Game {
 				System.out.println("Vous avez donc choisi la version Intelligente !");
 				this.setGloutonne(false);
 			}
-		} else {
-			this.playWithIa = false;
+		} else if(ia == 0) {
+			this.variant = JvJ;
+		}else if (ia == 2) {
+			this.variant = this.IAvIA;
 		}
 
 	}
@@ -221,7 +226,7 @@ public class Game {
 			this.to_string();
 
 			System.out.println("Tour de l'IA : ");
-			this.model.botBraveRedPoint();
+			this.model.botBraveRedPoint(2);
 			this.to_string();
 			if (this.model.estTerminee()) {
 				playing = false;
@@ -232,6 +237,22 @@ public class Game {
 
 	void plauIAvIA() {
 		// TO-DO
+		boolean playing = true;
+		while(playing) {
+			System.out.println("Tour de l'IA 1 : ");
+			this.model.botBraveRedPoint(1);
+			this.to_string();
+			if (this.model.estTerminee()) {
+				playing = false;
+			}
+			
+			System.out.println("Tour de l'IA 2 : ");
+			this.model.botBraveRedPoint(2);
+			this.to_string();
+			if (this.model.estTerminee()) {
+				playing = false;
+			}
+		}
 
 	}
 
