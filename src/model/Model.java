@@ -121,7 +121,6 @@ public class Model {
 		actualizingArrayPoints();
 	}
 
-	
 	// ******************** Fonctions pour le mode de jeu "Téméraire"
 	// ********************//
 
