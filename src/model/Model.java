@@ -250,6 +250,8 @@ public class Model {
 		int max = 0;
 		int maxScore;
 		
+		ArrayList<Point> Points = redPoints;
+		Points.addAll(bluePoints);
 		
 		//parcours des deux tableau une fois avec les points de notre couleur et une fois les points de l'autre couleur
 		for (int k = 0; k < this.redPoints.size(); k++) {
@@ -257,6 +259,7 @@ public class Model {
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
+
 						// on récupère le nb de points ennemie autour de nous qui n'est pas lock.
 						// 
 						// test si le nb est plus grand ou égal au max, test si la case existe (si elle n'est pas en dehors du plateau) et si la case est blanche.
@@ -267,7 +270,6 @@ public class Model {
 						// une fonction qui teste
 						// puis si on gagne une zone , savoir le nombre de pts gagné
 						// tant que one capture une zone, on regarde la zone d'au dessus
-						
 						
 					}
 				}
@@ -384,6 +386,33 @@ public class Model {
 		}
 		removePoints.clear();
 	}
+	
+	@SuppressWarnings("unlikely-arg-type")
+	public void actualizingArrayPointsTemeraire() {
+		Point p;
+		ArrayList<Integer> removePoints = new ArrayList<Integer>();
+		for (int i = redPoints.size() - 1; i >= 0; i--) {
+			p = redPoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 2 || !isNotLock(p.gety(), p.getx(), quadTree)) {
+				removePoints.add(i);
+			}
+		}
+		for (int i = 0; i < removePoints.size(); i++) {
+			redPoints.remove(removePoints.get(i));
+		}
+		removePoints.clear();
+
+		for (int i = bluePoints.size() - 1; i >= 0; i--) {
+			p = bluePoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 1 || !isNotLock(p.gety(), p.getx(), quadTree)) {
+				removePoints.add(i);
+			}
+		}
+		for (int i = 0; i < removePoints.size(); i++) {
+			redPoints.remove(removePoints.get(i));
+		}
+		removePoints.clear();
+	}
 
 	public boolean hasFreeNeighbor(int ligne, int col) {
 		for (int i = -1; i < 2; i++) {
@@ -401,6 +430,18 @@ public class Model {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				if ((plateau.couleurCase(ligne + i, col + j) != -1) && (plateau.couleurCase(ligne + i, col + j) != couleur) && (plateau.couleurCase(ligne + i, col + j) != 0)) {
+					nb++;
+				}
+			}
+		}
+		return nb;
+	}
+	
+	public int nbOpponentColorTemeraire(int ligne, int col, int couleur) {
+		int nb = 0;
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if ((plateau.couleurCase(ligne + i, col + j) != -1) && (plateau.couleurCase(ligne + i, col + j) != couleur) && (plateau.couleurCase(ligne + i, col + j) != 0) && isNotLock(ligne + i, col + j, quadTree)) {
 					nb++;
 				}
 			}
