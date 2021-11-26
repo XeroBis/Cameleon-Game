@@ -249,19 +249,26 @@ public class Model {
 		Point p = null;
 		int max = 0;
 		int maxScore;
-		ArrayList<Point> Points;
 		
-		if(color == 1) {
-			Points = this.redPoints;
-		} else {
-			Points = this.bluePoints;
-		}
 		
-		for (int k = 0; k < Points.size(); k++) {
-			p = Points.get(k);
+		//parcours des deux tableau une fois avec les points de notre couleur et une fois les points de l'autre couleur
+		for (int k = 0; k < this.redPoints.size(); k++) {
+			p = this.redPoints.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
+						// on récupère le nb de points ennemie autour de nous qui n'est pas lock.
+						// 
+						// test si le nb est plus grand ou égal au max, test si la case existe (si elle n'est pas en dehors du plateau) et si la case est blanche.
+						
+						
+						
+						// évaluer les points adjacents gagné.
+						// une fonction qui teste
+						// puis si on gagne une zone , savoir le nombre de pts gagné
+						// tant que one capture une zone, on regarde la zone d'au dessus
+						
+						
 					}
 				}
 				
