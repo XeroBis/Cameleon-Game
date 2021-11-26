@@ -69,7 +69,6 @@ public class Model {
 			return true;
 		}
 	}
-
 	public void recolorationBrave(int ligne, int col, int couleur) {
 		for (int i = ligne - 1; i < ligne + 2; i++) {
 			if (i >= 0 && i < this.size) {
@@ -81,7 +80,6 @@ public class Model {
 			}
 		}
 	}
-
 	public void botBraveRedPoint(int couleur) {
 		actualizingArrayPoints();
 		ArrayList<Point> attack;
@@ -100,7 +98,7 @@ public class Model {
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
-						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, Plateau.rouge);
+						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, couleur);
 						if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
 							mvp.clear();
 							max = nb;
@@ -120,13 +118,14 @@ public class Model {
 		else {
 			p = mvp.get((int) (Math.random() * mvp.size()));
 		}
-		colorationBrave(p.gety(), p.getx(), Plateau.rouge);
+		colorationBrave(p.gety(), p.getx(), couleur);
 		actualizingArrayPoints();
 	}
-
 	// ******************** Fonctions pour le mode de jeu "Téméraire"
 	// ********************//
 
+	// ******************** Fonctions pour le mode de jeu "Brave"
+	// ********************//
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0) {
 			System.out.println("Mouvement Interdit !");
