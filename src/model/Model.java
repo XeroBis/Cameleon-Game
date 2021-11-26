@@ -82,14 +82,21 @@ public class Model {
 		}
 	}
 
-	public void botBraveRedPoint() {
+	public void botBraveRedPoint(int couleur) {
 		actualizingArrayPoints();
+		ArrayList<Point> attack;
+		if(couleur == 1) {
+			attack = redPoints;
+		}
+		else {
+			attack = bluePoints;
+		}
 		
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
-		for (int k = 0; k < bluePoints.size(); k++) {
-			p = bluePoints.get(k);
+		for (int k = 0; k < attack.size(); k++) {
+			p = attack.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
@@ -258,7 +265,6 @@ public class Model {
 			acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 		}
 	}
-	
 	
 	public void coloration(int ligne, int col, int couleur) {
 		if (couleur == 1 && plateau.couleurCase(ligne, col) == 2) {
