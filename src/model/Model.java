@@ -107,7 +107,12 @@ public class Model {
 				}
 			}
 		}
-		p = mvp.get((int) (Math.random() * mvp.size()));
+		if (mvp.isEmpty()) {
+			p = new Point((int) (Math.random() * size), (int) (Math.random() * size));
+		}
+		else {
+			p = mvp.get((int) (Math.random() * mvp.size()));
+		}
 		colorationBrave(p.gety(), p.getx(), Plateau.rouge);
 		actualizingArrayPoints();
 	}
@@ -231,6 +236,10 @@ public class Model {
 				plateau.changerValeur(ligne + i, col + j, couleur);
 			}
 		}
+	}
+	
+	public void botTemeraireRedPoint() {
+		
 	}
 
 	// ******************** Fonctions générales ********************//
