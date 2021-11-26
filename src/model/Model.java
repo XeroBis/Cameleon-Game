@@ -243,8 +243,25 @@ public class Model {
 		}
 	}
 	
-	public void botTemeraireRedPoint() {
+	public void botTemeraireGlouton(int color) {
+		actualizingArrayPoints();
+		Plateau perso;
+		ArrayList<Point> mvp = new ArrayList<Point>();
+		Point p = null;
+		int max = 0;
+		ArrayList<Point> Points;
 		
+		if(color == 1) {
+			Points = this.redPoints;
+		} else {
+			Points = this.bluePoints;
+		}
+		
+		
+		
+		
+		
+		actualizingArrayPoints();
 	}
 
 	// ******************** Fonctions générales ********************//
