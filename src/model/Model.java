@@ -248,6 +248,7 @@ public class Model {
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
+		int maxScore;
 		ArrayList<Point> Points;
 		
 		if(color == 1) {
@@ -256,8 +257,16 @@ public class Model {
 			Points = this.bluePoints;
 		}
 		
-		
-		
+		for (int k = 0; k < Points.size(); k++) {
+			p = Points.get(k);
+			for (int i = -1; i < 2; i++) {
+				for (int j = -1; j < 2; j++) {
+					if (i != 0 || j != 0) {
+					}
+				}
+				
+			}
+		}
 		
 		
 		actualizingArrayPoints();
