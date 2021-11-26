@@ -90,10 +90,10 @@ public class Model {
 		int colorOpponent;
 		if(color == 1) {
 			colorOpponent = 2;
-			Points = this.bluePoints;
+			Points = this.redPoints;
 		} else {
 			colorOpponent = 1;
-			Points = this.redPoints;
+			Points = this.bluePoints;
 		}
 		 
 		
@@ -102,7 +102,7 @@ public class Model {
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
-						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, colorOpponent);
+						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
 						if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
 							mvp.clear();
 							max = nb;
