@@ -87,12 +87,9 @@ public class Model {
 		Point p = null;
 		int max = 0;
 		ArrayList<Point> Points;
-		int colorOpponent;
 		if(color == 1) {
-			colorOpponent = 2;
 			Points = this.redPoints;
 		} else {
-			colorOpponent = 1;
 			Points = this.bluePoints;
 		}
 		 
@@ -124,6 +121,7 @@ public class Model {
 		colorationBrave(p.gety(), p.getx(), color);
 		actualizingArrayPoints();
 	}
+	
 	// ******************** Fonctions pour le mode de jeu "Téméraire"
 	// ********************//
 
