@@ -93,7 +93,7 @@ public class Game {
 	}
 
 	private void fastParamBrave() {
-		this.isBrave = true;
+		this.isBrave = false;
 		this.isGloutonne = true;
 		this.variant = IAvIA; // IA
 	}
@@ -227,9 +227,13 @@ public class Game {
 				playing = false;
 			}
 			this.to_string();
-
 			System.out.println("Tour de l'IA : ");
-			this.model.botBraveGlouton(2);
+			if(this.isBrave) {
+				this.model.botBraveGlouton(2);
+			} else if(!this.isBrave && this.isGloutonne) {
+				this.model.botTemeraireGlouton(2);
+			}
+			
 			this.to_string();
 			if (this.model.estTerminee()) {
 				playing = false;
@@ -242,19 +246,36 @@ public class Game {
 		// TO-DO
 		boolean playing = true;
 		while(playing) {
-			System.out.println("Tour de l'IA 1 : ");
-			this.model.botBraveGlouton(1);
-			this.to_string();
-			if (this.model.estTerminee()) {
-				playing = false;
+			if(this.isBrave) {
+				System.out.println("Tour de l'IA 1 : ");
+				this.model.botBraveGlouton(1);
+				this.to_string();
+				if (this.model.estTerminee()) {
+					playing = false;
+				}
+				
+				System.out.println("Tour de l'IA 2 : ");
+				this.model.botBraveGlouton(2);
+				this.to_string();
+				if (this.model.estTerminee()) {
+					playing = false;
+				}
+			} else if(!this.isBrave && this.isGloutonne) {
+				System.out.println("Tour de l'IA 1 : ");
+				this.model.botTemeraireGlouton(1);
+				this.to_string();
+				if (this.model.estTerminee()) {
+					playing = false;
+				}
+				
+				System.out.println("Tour de l'IA 2 : ");
+				this.model.botTemeraireGlouton(2);
+				this.to_string();
+				if (this.model.estTerminee()) {
+					playing = false;
+				}
 			}
 			
-			System.out.println("Tour de l'IA 2 : ");
-			this.model.botBraveGlouton(2);
-			this.to_string();
-			if (this.model.estTerminee()) {
-				playing = false;
-			}
 		}
 		this.to_string();
 

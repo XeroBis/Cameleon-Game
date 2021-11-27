@@ -4,12 +4,16 @@ public class QuadTree {
 	private Integer value;
 	private Point point;
 	private QuadTree qt0, qt1, qt2, qt3;
+	private QuadTree father;
+	private boolean isSterile;
 	public static int blanc = 0, bleu = 1, rouge = 2;
 
 	/*
 	 * Constructeur de QuadTree
 	 */
 	public QuadTree() {
+		this.isSterile = false;
+		this.father = null;
 		this.value = null;
 		this.point = null;
 		this.qt0 = null;
@@ -27,14 +31,20 @@ public class QuadTree {
 	 * 
 	 * @param qt0, qt1, qt2 et qt3, les 4 sous-zones.
 	 */
-	public QuadTree(Integer value, Point point, QuadTree qt0, QuadTree qt1, QuadTree qt2, QuadTree qt3) {
+	public QuadTree(QuadTree father, boolean isSterile,Integer value, Point point, QuadTree qt0, QuadTree qt1, QuadTree qt2, QuadTree qt3) {
+		this.father = father;
+		this.isSterile = isSterile;
 		this.value = value;
 		this.point = point;
 		this.qt0 = qt0;
 		this.qt1 = qt1;
 		this.qt2 = qt2;
 		this.qt3 = qt3;
+		
 	}
+	
+	
+	
 
 	public void setQt(int index, QuadTree newQuad) {
 		switch (index) {
@@ -100,7 +110,13 @@ public class QuadTree {
 	public Point getPoint() {
 		return this.point;
 	}
+	public boolean getisSterile() {
+		return this.isSterile;
+	}
 
+	public QuadTree getFather() {
+		return this.father;
+	}
 	public void printValuePoint() {
 		if (this.point != null && this.value != null) {
 			System.out.println(this.value + ";" + this.point.getx() + ";" + this.point.gety());

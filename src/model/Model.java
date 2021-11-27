@@ -36,13 +36,13 @@ public class Model {
 
 	public void setNewK(int k) {
 		this.plateau = new Plateau(k);
-		this.quadTree = buildingQT(k, new Point(0, 0));
+		this.quadTree = buildingQT(null, k, new Point(0, 0));
 		this.size = 3 * (int) Math.pow(2, k);
 	}
 
-	private QuadTree buildingQT(int k, Point p) {
+	private QuadTree buildingQT(QuadTree father, int k, Point p) {
 		if (k == 0) {
-			return new QuadTree(QuadTree.blanc, p, null, null, null, null);
+			return new QuadTree(father, true, QuadTree.blanc, p, null, null, null, null);
 		} else {
 			int dim = (int) (3 * Math.pow(2, k));
 
@@ -50,8 +50,8 @@ public class Model {
 			Point p2 = new Point(p.getx() + dim / 2, p.gety() + dim / 2);
 			Point p3 = new Point(p.getx(), p.gety() + dim / 2);
 
-			return new QuadTree(QuadTree.blanc, p, buildingQT(k - 1, p), buildingQT(k - 1, p1), buildingQT(k - 1, p2),
-					buildingQT(k - 1, p3));
+			return new QuadTree(null, false, QuadTree.blanc, p, buildingQT(father, k - 1, p),
+					buildingQT(father, k - 1, p1), buildingQT(father, k - 1, p2), buildingQT(father, k - 1, p3));
 		}
 	}
 
@@ -69,6 +69,7 @@ public class Model {
 			return true;
 		}
 	}
+
 	public void recolorationBrave(int ligne, int col, int couleur) {
 		for (int i = ligne - 1; i < ligne + 2; i++) {
 			if (i >= 0 && i < this.size) {
@@ -87,33 +88,33 @@ public class Model {
 		Point p = null;
 		int max = 0;
 		ArrayList<Point> Points;
-		if(color == 1) {
+		if (color == 1) {
 			Points = this.redPoints;
 		} else {
 			Points = this.bluePoints;
 		}
-		 
-		
+
 		for (int k = 0; k < Points.size(); k++) {
 			p = Points.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
 						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
-						if(nb > max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
-							mvp.clear();
+						if (nb > max && plateau.couleurCase(p.gety() + i, p.getx() + j) != -1
+								&& plateau.couleurCase(p.gety() + i, p.getx() + j) == 0) {
+							mvp.clear(); 
 							max = nb;
 							mvp.add(new Point(p.getx() + j, p.gety() + i));
-						}
-						else if (nb == max && plateau.couleurCase(p.gety() + i,p.getx() + j) != -1 && plateau.couleurCase(p.gety() + i,p.getx() + j) == 0) {
+						} else if (nb == max && plateau.couleurCase(p.gety() + i, p.getx() + j) != -1
+								&& plateau.couleurCase(p.gety() + i, p.getx() + j) == 0) {
 							mvp.add(new Point(p.getx() + j, p.gety() + i));
 						}
 					}
 				}
 			}
 		}
-		if(mvp.isEmpty()) {
-			p = new Point((int) (Math.random() * this.size),(int) (Math.random() * this.size));
+		if (mvp.isEmpty()) {
+			p = new Point((int) (Math.random() * this.size), (int) (Math.random() * this.size));
 		} else {
 			p = mvp.get((int) (Math.random() * mvp.size()));
 		}
@@ -125,7 +126,7 @@ public class Model {
 	// ********************//
 
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
-		if (plateau.couleurCase(ligne, col) != 0) {
+		if (plateau.couleurCase(ligne, col) != this.plateau.blanc) {
 			System.out.println("Mouvement Interdit !");
 			return false;
 		} else {
@@ -146,7 +147,8 @@ public class Model {
 		for (int i = ligne - 1; i < ligne + 2; i++) {
 			if (i >= 0 && i < this.size) {
 				for (int j = col - 1; j < col + 2; j++) {
-					if ((j >= 0) && (j < this.size) && (plateau.couleurCase(i, j) != 0) && (isNotLock(i, j, this.quadTree))) {
+					if ((j >= 0) && (j < this.size) && (plateau.couleurCase(i, j) != 0)
+							&& (isNotLock(i, j, this.quadTree))) {
 						coloration(i, j, couleur);
 					}
 				}
@@ -241,54 +243,140 @@ public class Model {
 			}
 		}
 	}
-	
+
 	public void botTemeraireGlouton(int color) {
 		actualizingArrayPoints();
 		Plateau perso;
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
-		int maxScore;
-		
+
 		ArrayList<Point> Points = redPoints;
 		Points.addAll(bluePoints);
-		
-		//parcours des deux tableau une fois avec les points de notre couleur et une fois les points de l'autre couleur
 		for (int k = 0; k < this.redPoints.size(); k++) {
 			p = this.redPoints.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
-
-						// on récupère le nb de points ennemie autour de nous qui n'est pas lock.
-						// 
-						// test si le nb est plus grand ou égal au max, test si la case existe (si elle n'est pas en dehors du plateau) et si la case est blanche.
-						
-						
-						
-						// évaluer les points adjacents gagné.
-						// une fonction qui teste
-						// puis si on gagne une zone , savoir le nombre de pts gagné
-						// tant que one capture une zone, on regarde la zone d'au dessus
-						
+						if(plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
+							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
+							if (TestIfGetZone(p.gety()+i, p.getx()+j, color)) {
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
+								max = 8;
+							} else if(nb > max) {
+								mvp.clear();
+								mvp.add(new Point(p.getx()+j, p.gety()+i));
+								max = nb;
+							} else if(nb >= max) {
+								mvp.add(new Point(p.getx()+j, p.gety()+i));
+							}
+						}
 					}
 				}
-				
+
 			}
 		}
 		
+		for (int k = 0; k < this.bluePoints.size(); k++) {
+			p = this.redPoints.get(k);
+			for (int i = -1; i < 2; i++) {
+				for (int j = -1; j < 2; j++) {
+					if (i != 0 || j != 0) {
+						if(plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
+							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
+							if (TestIfGetZone(p.gety()+i, p.getx()+j, color)) {
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
+								max = 8;
+							} else if(nb > max) {
+								mvp.clear();
+								mvp.add(new Point(p.getx()+j, p.gety()+i));
+								max = nb;
+							} else if(nb >= max) {
+								mvp.add(new Point(p.getx()+j, p.gety()+i));
+							}
+						}
+					}
+				}
+
+			}
+		}
+		if (mvp.isEmpty()) {
+			p = new Point((int) (Math.random() * this.size), (int) (Math.random() * this.size));
+		} else {
+			p = mvp.get((int) (Math.random() * mvp.size()));
+		}
+		this.colorationTemeraire(p.gety(), p.getx(), color);
+		updateScoreTemeraire();
+		actualizingArrayPointsTemeraire();
+	}
+	public void updateScoreTemeraire() {
+		int scoreBleu = 0;
+		int scoreRouge = 0;
 		
-		actualizingArrayPoints();
+		for(int i = 0; i< this.size; i++) {
+			for(int j = 0; j< this.size; j++) {
+				if(this.plateau.couleurCase(i, j)== this.plateau.rouge) {
+					scoreRouge ++;
+				} else if(this.plateau.couleurCase(i, j)== this.plateau.bleu) {
+					scoreBleu ++;
+				}
+			}
+		}
+		this.redScore = scoreRouge;
+		this.blueScore = scoreBleu;
+	}
+
+	public boolean TestIfGetZone(int ligne, int col, int color) {
+		// en premier on test si les coord données remplisse une partie
+		QuadTree t = this.quadTree;
+		boolean descendu = false;
+		int etage = 1;
+		while (!descendu) {
+			if (!t.getisSterile()) {
+				if (ligne < (this.size) / (2 * etage) && col < (this.size) / (2 * etage)) {
+					t = t.getQt(0);
+
+				} else if (ligne >= (this.size / (2 * etage)) && col < (this.size) / (2 * etage)) {
+					t = t.getQt(1);
+
+				} else if (ligne >= (this.size / (2 * etage)) && col >= (this.size) / (2 * etage)) {
+					t = t.getQt(2);
+
+				} else if (ligne < (this.size / (2 * etage)) && col >= (this.size) / (2 * etage)) {
+					t = t.getQt(3);
+				}
+				etage++;
+			} else {
+				descendu = true;
+			}
+		}
+		if(this.getNumberOfCaseColoried(t.getPoint().getx(), t.getPoint().gety()) == 8) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	public int getNumberOfCaseColoried(int ligne, int col) {
+		int caseColorie = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				if (plateau.couleurCase(ligne + i, col + j) != this.plateau.blanc) {
+					caseColorie++;
+				}
+			}
+		}
+		return caseColorie;
 	}
 
 	// ******************** Fonctions générales ********************//
 
-	
 	public void RemplirTableau(int ligne, int col, int couleur) {
 		this.colorationQuadTree(ligne, col, couleur);
 		this.coloration(ligne, col, couleur);
 	}
-	
+
 	public void colorationQuadTree(int ligne, int col, int couleur) {
 		Point p = getSmallRegionTopLeft(ligne, col);
 
@@ -297,7 +385,7 @@ public class Model {
 			acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 		}
 	}
-	
+
 	public void coloration(int ligne, int col, int couleur) {
 		if (couleur == 1 && plateau.couleurCase(ligne, col) == 2) {
 			this.redScore--;
@@ -386,14 +474,15 @@ public class Model {
 		}
 		removePoints.clear();
 	}
-	
+
 	@SuppressWarnings("unlikely-arg-type")
 	public void actualizingArrayPointsTemeraire() {
 		Point p;
 		ArrayList<Integer> removePoints = new ArrayList<Integer>();
 		for (int i = redPoints.size() - 1; i >= 0; i--) {
 			p = redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 2 || !isNotLock(p.gety(), p.getx(), quadTree)) {
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 2
+					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
 				removePoints.add(i);
 			}
 		}
@@ -404,7 +493,8 @@ public class Model {
 
 		for (int i = bluePoints.size() - 1; i >= 0; i--) {
 			p = bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 1 || !isNotLock(p.gety(), p.getx(), quadTree)) {
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 1
+					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
 				removePoints.add(i);
 			}
 		}
@@ -429,19 +519,23 @@ public class Model {
 		int nb = 0;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
-				if ((plateau.couleurCase(ligne + i, col + j) != -1) && (plateau.couleurCase(ligne + i, col + j) != couleur) && (plateau.couleurCase(ligne + i, col + j) != 0)) {
+				if ((plateau.couleurCase(ligne + i, col + j) != -1)
+						&& (plateau.couleurCase(ligne + i, col + j) != couleur)
+						&& (plateau.couleurCase(ligne + i, col + j) != 0)) {
 					nb++;
 				}
 			}
 		}
 		return nb;
 	}
-	
+
 	public int nbOpponentColorTemeraire(int ligne, int col, int couleur) {
 		int nb = 0;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
-				if ((plateau.couleurCase(ligne + i, col + j) != -1) && (plateau.couleurCase(ligne + i, col + j) != couleur) && (plateau.couleurCase(ligne + i, col + j) != 0) && isNotLock(ligne + i, col + j, quadTree)) {
+				if ((plateau.couleurCase(ligne + i, col + j) != -1)
+						&& (plateau.couleurCase(ligne + i, col + j) != couleur)
+						&& (plateau.couleurCase(ligne + i, col + j) != 0) && isNotLock(ligne + i, col + j, quadTree)) {
 					nb++;
 				}
 			}
