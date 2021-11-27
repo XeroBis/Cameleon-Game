@@ -7,7 +7,6 @@ public class Plateau {
 	private int uncolored_nb;
 	public static int blanc = 0, bleu = 1, rouge = 2;
 
-
 	/*
 	 * Constructeur de Plateau
 	 * 
@@ -27,17 +26,30 @@ public class Plateau {
 		this.uncolored_nb = dim * dim;
 	}
 
-	public void afficherPlateau() {
+	public void afficherPlateau() {	
+		
 		for (int i = 0; i < tableau.size(); i++) {
 			System.out.print("[");
 
 			ArrayList<Integer> ligne = tableau.get(i);
 
-			for (int j = 0; j < ligne.size() - 1; j++) {
-				System.out.print((int) (ligne.get(j)));
+			for (int j = 0; j < ligne.size()-1; j++) {
+				if(ligne.get(i) == bleu) {
+					System.out.print("B");
+				} else if(ligne.get(i) == rouge) {
+					System.out.print("R");
+				} else if(ligne.get(i) == blanc) {
+					System.out.print("A");
+				}
 				System.out.print(" , ");
 			}
-			System.out.print((int) (ligne.get(ligne.size() - 1)));
+			if(ligne.get(ligne.size()-1) == bleu) {
+				System.out.print("B");
+			} else if(ligne.get(ligne.size()-1) == rouge) {
+				System.out.print("R");
+			} else if(ligne.get(ligne.size()-1) == blanc) {
+				System.out.print("A");
+			}
 			System.out.println(']');
 		}
 	}

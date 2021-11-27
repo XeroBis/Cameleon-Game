@@ -119,10 +119,10 @@ public class Game {
 		}
 
 		int ia = 0;
-		System.out.println("Voulez-vous jouer avec un joueur? 0, contre une IA? 1, ou laisser deux IA jouer? 2");
+		System.out.println("Voulez-vous jouer avec un joueur? 0 , contre une IA? 1, ou laisser deux IA jouer? 2");
 		ia = scan.nextInt();
-		if (ia == 1) {
-			this.variant = this.JvIA;
+		if (ia != 0) {
+			//this.variant = this.JvIA;
 			System.out.println(
 					"L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
 			int versionIA = -1;
@@ -138,10 +138,15 @@ public class Game {
 				System.out.println("Vous avez donc choisi la version Intelligente !");
 				this.setGloutonne(false);
 			}
-		} else if (ia == 0) {
+		} else {
+			System.out.println("Vous avez donc choisi de jouer en Joueur versus Joueur.");
+		}
+		if (ia == 0) {
 			this.variant = JvJ;
 		} else if (ia == 2) {
 			this.variant = this.IAvIA;
+		} else if (ia == 1) {
+			this.variant = this.JvIA;
 		}
 
 	}
@@ -269,9 +274,11 @@ public class Game {
 				} else {
 					System.out.println("Tour de l'IA 2 : ");
 					this.model.botTemeraireGlouton(rouge);
-					this.to_string();
+					
 					if (this.model.estTerminee()) {
 						playing = false;
+					} else {
+						this.to_string();
 					}
 				}
 			}
