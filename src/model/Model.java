@@ -375,6 +375,9 @@ public class Model {
 	}
 
 	public int TestIfGetBiggerZone(QuadTree son) {
+		if(son.getFather() == null) {
+			return 1;
+		}
 		QuadTree father = son.getFather();
 		int nbZone = 0;
 		for (int i = 0; i <= 3; i++) {
@@ -383,7 +386,12 @@ public class Model {
 			}
 		}
 		if (nbZone == 3) { // on peut colorier une grande zone, donc on test le père
-			return 4 * TestIfGetBiggerZone(father);
+			if(father.getFather() == null) {
+				System.out.println("test");
+				return 4;
+			} else {
+				return 4 * TestIfGetBiggerZone(father);
+			}
 		} else {
 			return 1; // si on ne capture pas la grande zone alors on a capturer seulement une petite zone.
 		}

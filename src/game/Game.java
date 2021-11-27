@@ -25,7 +25,7 @@ public class Game {
 	 */
 	public void play(boolean test) {
 		this.loadFiles();
-		if(test) {
+		if (test) {
 			this.fastParamBrave();
 		} else {
 			this.parametreOfGame();
@@ -34,12 +34,10 @@ public class Game {
 			this.playIAvJ();
 		} else if (this.variant == JvJ) {
 			this.playJvJ();
-		} else if(this.variant == IAvIA) {
+		} else if (this.variant == IAvIA) {
 			this.plauIAvIA();
 		}
 	}
-	
-	
 
 	/*
 	 * fonction permettant le chargement d'un fichier txt afin de repmplir le
@@ -95,9 +93,9 @@ public class Game {
 	private void fastParamBrave() {
 		this.isBrave = false;
 		this.isGloutonne = true;
-		this.variant = IAvIA; // IA
+		this.variant = JvJ; // IA
 	}
-	
+
 	/*
 	 * fonction nous permettant de parametrer tout les parametres pour une partie
 	 * càd, la version du jeu, la version de l'ia
@@ -140,9 +138,9 @@ public class Game {
 				System.out.println("Vous avez donc choisi la version Intelligente !");
 				this.setGloutonne(false);
 			}
-		} else if(ia == 0) {
+		} else if (ia == 0) {
 			this.variant = JvJ;
-		}else if (ia == 2) {
+		} else if (ia == 2) {
 			this.variant = this.IAvIA;
 		}
 
@@ -207,80 +205,83 @@ public class Game {
 	}
 
 	/*
-	 * Fonction permettant à un joueur de jouer contre une IA 
+	 * Fonction permettant à un joueur de jouer contre une IA
 	 */
 	public void playIAvJ() {
 		boolean playing = true;
 		Scanner scan = new Scanner(System.in);
 		this.to_string();
 		while (playing) {
-			
+
 			System.out.println("Tour du Joueur : ");
 			int[] coord = chooseCoordinate();
 			boolean play = this.playMove(coord[1], coord[0], bleu);
 			while (!play) {
-				System.out.println("La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
+				System.out.println(
+						"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 				coord = chooseCoordinate();
 				play = this.playMove(coord[1], coord[0], bleu);
 			}
 			if (this.model.estTerminee()) {
 				playing = false;
+			} else {
+				this.to_string();
+				System.out.println("Tour de l'IA : ");
+				if (this.isBrave) {
+					this.model.botBraveGlouton(rouge);
+				} else if (!this.isBrave && this.isGloutonne) {
+					this.model.botTemeraireGlouton(rouge);
+				}
+				this.to_string();
+				if (this.model.estTerminee()) {
+					playing = false;
+				}
 			}
-			this.to_string();
-			System.out.println("Tour de l'IA : ");
-			if(this.isBrave) {
-				this.model.botBraveGlouton(2);
-			} else if(!this.isBrave && this.isGloutonne) {
-				this.model.botTemeraireGlouton(2);
-			}
-			
-			this.to_string();
-			if (this.model.estTerminee()) {
-				playing = false;
-			}
+
 		}
 		this.to_string();
 	}
 
 	void plauIAvIA() {
-		// TO-DO
 		boolean playing = true;
-		while(playing) {
-			if(this.isBrave) {
+		while (playing) {
+			if (this.isBrave) {
 				System.out.println("Tour de l'IA 1 : ");
-				this.model.botBraveGlouton(1);
+				this.model.botBraveGlouton(bleu);
 				this.to_string();
 				if (this.model.estTerminee()) {
 					playing = false;
+				} else {
+					System.out.println("Tour de l'IA 2 : ");
+					this.model.botBraveGlouton(rouge);
+					this.to_string();
+					if (this.model.estTerminee()) {
+						playing = false;
+					}
 				}
-				
-				System.out.println("Tour de l'IA 2 : ");
-				this.model.botBraveGlouton(2);
-				this.to_string();
-				if (this.model.estTerminee()) {
-					playing = false;
-				}
-			} else if(!this.isBrave && this.isGloutonne) {
+			} else if (!this.isBrave && this.isGloutonne) {
 				System.out.println("Tour de l'IA 1 : ");
-				this.model.botTemeraireGlouton(1);
+				this.model.botTemeraireGlouton(bleu);
 				this.to_string();
 				if (this.model.estTerminee()) {
 					playing = false;
-				}
-				
-				System.out.println("Tour de l'IA 2 : ");
-				this.model.botTemeraireGlouton(2);
-				this.to_string();
-				if (this.model.estTerminee()) {
-					playing = false;
+				} else {
+					System.out.println("Tour de l'IA 2 : ");
+					this.model.botTemeraireGlouton(rouge);
+					this.to_string();
+					if (this.model.estTerminee()) {
+						playing = false;
+					}
 				}
 			}
-			
 		}
 		this.to_string();
 
 	}
 
+	/*
+	 * Fonction permettant au joueur de jouer un tour
+	 */
 	public boolean playMove(int i, int j, int couleur) {
 		if (this.isBrave) {
 			return this.model.colorationBrave(i, j, couleur);
@@ -301,15 +302,13 @@ public class Game {
 		System.out.print("Veuillez entrez un numero de colonne :");
 		res[0] = scan.nextInt();
 		while (res[0] > model.getSize() - 1 || res[0] < 0) {
-			System.out.println(
-					"Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize() + " exclus.");
+			System.out.println("Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize() + " exclus.");
 			res[0] = scan.nextInt();
 		}
 		System.out.print("Veuillez entrez un numero de ligne :");
 		res[1] = scan.nextInt();
 		while (res[1] > model.getSize() - 1 || res[1] < 0) {
-			System.out
-					.println("Veuillez indiquez un numéro de ligne entre 0 et" + model.getSize() + " exclus.");
+			System.out.println("Veuillez indiquez un numéro de ligne entre 0 et" + model.getSize() + " exclus.");
 			res[1] = scan.nextInt();
 		}
 		System.out.println("Vous avez choisi le point en (" + res[0] + "," + res[1] + ")");
