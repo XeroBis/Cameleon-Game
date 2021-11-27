@@ -126,6 +126,7 @@ public class Model {
 	// ********************//
 
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
+		System.out.println("taille pts red :" + this.redPoints.size() + ", taille pts bleu :" + this.bluePoints.size());
 		if (plateau.couleurCase(ligne, col) != this.plateau.blanc) {
 			System.out.println("Mouvement Interdit !");
 			return false;
@@ -135,16 +136,15 @@ public class Model {
 
 			Point p = getSmallRegionTopLeft(ligne, col);
 			if (isSmallRegionFull(p.gety(), p.getx())) {
-				
+
 				recoloringSmallRegion(p.gety(), p.getx(), couleur);
 				recoloringSmallRegionQuadTree(ligne, col, couleur, this.quadTree);
-				
+
 				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 				System.out.println("fin premier");
 				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 			}
-			
-			
+
 		}
 		return true;
 	}
@@ -162,8 +162,9 @@ public class Model {
 		}
 	}
 
+	
 	public boolean isNotLock(int ligne, int col, QuadTree qt) {
-		if ((qt.getQt(0) == null) && (qt.getQt(1) == null) && (qt.getQt(2) == null) && (qt.getQt(3) == null)) {
+		if (qt.getisSterile()) {
 			return qt.getValue() == QuadTree.blanc;
 		} else if (qt.getValue() != QuadTree.blanc) {
 			return false;
@@ -210,13 +211,24 @@ public class Model {
 
 			if (rge + ble == 4) {
 				for (int i = 0; i < 4; i++) {
-					System.out.println("Test couleur : " + qt.getQt(i).getValue() );
 					if (qt.getQt(i).getValue() != couleur) {
-						System.out.println("TEST nb recolo");
-						System.out.println("y = " + qt.getQt(i).getPoint().gety());
-						System.out.println("x = " + qt.getQt(i).getPoint().getx());
+						if (couleur == this.plateau.bleu) {
+							if (rge > ble) {
+								qt.setValue(2);
+							} else {
+								qt.setValue(couleur);
+							}
+						} else if (couleur == this.plateau.rouge) {
+							System.out.println("valeur bleu: " + ble + ", valeur rouge :" + rge);
+							if (ble > rge) {
+								qt.setValue(1);
+							} else {
+								qt.setValue(couleur);
+							}
+						}
 						qt.setValue(couleur);
-						acquiringRegion(qt.getQt(i).getPoint().gety(), qt.getQt(i).getPoint().getx(), couleur, qt.getQt(i));
+						acquiringRegion(qt.getQt(i).getPoint().gety(), qt.getQt(i).getPoint().getx(), couleur,
+								qt.getQt(i));
 					}
 				}
 			} else {
@@ -247,7 +259,7 @@ public class Model {
 		}
 		return true;
 	}
-	
+
 	public void recoloringSmallRegionQuadTree(int ligne, int col, int color, QuadTree father) {
 		if (father.getisSterile()) {
 			father.setValue(color);
@@ -268,9 +280,9 @@ public class Model {
 			}
 		}
 	}
-	
+
 	public void recoloringSmallRegion(int ligne, int col, int couleur) {
-		
+
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				plateau.changerValeur(ligne + i, col + j, couleur);
@@ -525,6 +537,7 @@ public class Model {
 
 	@SuppressWarnings("unlikely-arg-type")
 	public void actualizingArrayPoints() {
+
 		Point p;
 		ArrayList<Integer> removePoints = new ArrayList<Integer>();
 		for (int i = redPoints.size() - 1; i >= 0; i--) {
@@ -545,7 +558,7 @@ public class Model {
 			}
 		}
 		for (int i = 0; i < removePoints.size(); i++) {
-			redPoints.remove(removePoints.get(i));
+			this.bluePoints.remove(removePoints.get(i));
 		}
 		removePoints.clear();
 	}
@@ -553,10 +566,35 @@ public class Model {
 	@SuppressWarnings("unlikely-arg-type")
 	public void actualizingArrayPointsTemeraire() {
 		Point p;
+		int size = this.redPoints.size();
+		for(int i =0; i < size; i++) {
+			p = this.redPoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.bleu || !isNotLock(p.gety(), p.getx(), quadTree)) {
+				this.redPoints.remove(i);
+				size--;
+				i--;
+			}
+		}
+		
+		size = this.bluePoints.size();
+		for(int i =0; i < size; i++) {
+			p = this.bluePoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.rouge || !isNotLock(p.gety(), p.getx(), quadTree)) {
+				this.bluePoints.remove(i);
+				size--;
+				i--;
+			}
+		}
+		
+		
+		
+		
+		/*
 		ArrayList<Integer> removePoints = new ArrayList<Integer>();
+		
 		for (int i = redPoints.size() - 1; i >= 0; i--) {
 			p = redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 2
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.bleu
 					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
 				removePoints.add(i);
 			}
@@ -564,19 +602,26 @@ public class Model {
 		for (int i = 0; i < removePoints.size(); i++) {
 			redPoints.remove(removePoints.get(i));
 		}
-		removePoints.clear();
+		removePoints.clear();	
 
 		for (int i = bluePoints.size() - 1; i >= 0; i--) {
 			p = bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 1
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.rouge
 					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
 				removePoints.add(i);
 			}
 		}
 		for (int i = 0; i < removePoints.size(); i++) {
-			redPoints.remove(removePoints.get(i));
+			this.bluePoints.remove(removePoints.get(i));
 		}
 		removePoints.clear();
+		*/
+		
+		
+		
+		
+		
+		
 	}
 
 	public boolean hasFreeNeighbor(int ligne, int col) {
@@ -617,4 +662,5 @@ public class Model {
 		}
 		return nb;
 	}
+
 }
