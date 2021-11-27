@@ -102,7 +102,7 @@ public class Model {
 						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
 						if (nb > max && plateau.couleurCase(p.gety() + i, p.getx() + j) != -1
 								&& plateau.couleurCase(p.gety() + i, p.getx() + j) == 0) {
-							mvp.clear(); 
+							mvp.clear();
 							max = nb;
 							mvp.add(new Point(p.getx() + j, p.gety() + i));
 						} else if (nb == max && plateau.couleurCase(p.gety() + i, p.getx() + j) != -1
@@ -246,10 +246,10 @@ public class Model {
 
 	public void botTemeraireGlouton(int color) {
 		actualizingArrayPoints();
-		Plateau perso;
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
+		int nbZoneMax = 0;
 
 		ArrayList<Point> Points = redPoints;
 		Points.addAll(bluePoints);
@@ -258,17 +258,23 @@ public class Model {
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
-						if(plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
+						if (plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
 							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
-							if (TestIfGetZone(p.gety()+i, p.getx()+j, color)) {
-								mvp.add(new Point(p.getx() + j, p.gety() + i));
-								max = 8;
-							} else if(nb > max) {
+							int nbZone = getNumberOfZoneTaken(p.gety() + i, p.getx() + j, color);
+							
+							if (nbZone > nbZoneMax) {
+								nbZoneMax = nbZone;
 								mvp.clear();
-								mvp.add(new Point(p.getx()+j, p.gety()+i));
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
+							}else if (nbZone == nbZoneMax) {
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
+								
+							} else if (nb > max && nbZoneMax == 0) {
+								mvp.clear();
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
 								max = nb;
-							} else if(nb >= max) {
-								mvp.add(new Point(p.getx()+j, p.gety()+i));
+							} else if (nb == max && nbZoneMax == 0) {
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
 							}
 						}
 					}
@@ -276,23 +282,29 @@ public class Model {
 
 			}
 		}
-		
+
 		for (int k = 0; k < this.bluePoints.size(); k++) {
 			p = this.redPoints.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
-						if(plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
+						if (plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
 							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
-							if (TestIfGetZone(p.gety()+i, p.getx()+j, color)) {
-								mvp.add(new Point(p.getx() + j, p.gety() + i));
-								max = 8;
-							} else if(nb > max) {
+							int nbZone = getNumberOfZoneTaken(p.gety() + i, p.getx() + j, color);
+							
+							if (nbZone > nbZoneMax) {
+								nbZoneMax = nbZone;
 								mvp.clear();
-								mvp.add(new Point(p.getx()+j, p.gety()+i));
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
+							}else if (nbZone == nbZoneMax) {
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
+								
+							} else if (nb > max && nbZoneMax == 0) {
+								mvp.clear();
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
 								max = nb;
-							} else if(nb >= max) {
-								mvp.add(new Point(p.getx()+j, p.gety()+i));
+							} else if (nb == max && nbZoneMax == 0) {
+								mvp.add(new Point(p.getx() + j, p.gety() + i));
 							}
 						}
 					}
@@ -309,16 +321,17 @@ public class Model {
 		updateScoreTemeraire();
 		actualizingArrayPointsTemeraire();
 	}
+
 	public void updateScoreTemeraire() {
 		int scoreBleu = 0;
 		int scoreRouge = 0;
-		
-		for(int i = 0; i< this.size; i++) {
-			for(int j = 0; j< this.size; j++) {
-				if(this.plateau.couleurCase(i, j)== this.plateau.rouge) {
-					scoreRouge ++;
-				} else if(this.plateau.couleurCase(i, j)== this.plateau.bleu) {
-					scoreBleu ++;
+
+		for (int i = 0; i < this.size; i++) {
+			for (int j = 0; j < this.size; j++) {
+				if (this.plateau.couleurCase(i, j) == this.plateau.rouge) {
+					scoreRouge++;
+				} else if (this.plateau.couleurCase(i, j) == this.plateau.bleu) {
+					scoreBleu++;
 				}
 			}
 		}
@@ -326,7 +339,11 @@ public class Model {
 		this.blueScore = scoreBleu;
 	}
 
-	public boolean TestIfGetZone(int ligne, int col, int color) {
+	/*
+	 * Fonction testant si la zone qui contient le point en ligne col contient 8
+	 * case coloriée et peut donc être capturé
+	 */
+	public int getNumberOfZoneTaken(int ligne, int col, int color) {
 		// en premier on test si les coord données remplisse une partie
 		QuadTree t = this.quadTree;
 		boolean descendu = false;
@@ -350,14 +367,29 @@ public class Model {
 				descendu = true;
 			}
 		}
-		if(this.getNumberOfCaseColoried(t.getPoint().getx(), t.getPoint().gety()) == 8) {
-			return true;
+		if (this.getNumberOfCaseColoried(t.getPoint().getx(), t.getPoint().gety()) == 8) {
+			return TestIfGetBiggerZone(t);
 		} else {
-			return false;
+			return 0;
 		}
 	}
-	
-	
+
+	public int TestIfGetBiggerZone(QuadTree son) {
+		QuadTree father = son.getFather();
+		int nbZone = 0;
+		for (int i = 0; i <= 3; i++) {
+			if (father.getQt(i).getValue() != this.plateau.blanc) {
+				nbZone++;
+			}
+		}
+		if (nbZone == 3) { // on peut colorier une grande zone, donc on test le père
+			return 4 * TestIfGetBiggerZone(father);
+		} else {
+			return 1; // si on ne capture pas la grande zone alors on a capturer seulement une petite zone.
+		}
+
+	}
+
 	public int getNumberOfCaseColoried(int ligne, int col) {
 		int caseColorie = 0;
 		for (int i = 0; i < 3; i++) {
