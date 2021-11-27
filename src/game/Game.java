@@ -14,7 +14,10 @@ public class Game {
 	public static int JvJ = 0, JvIA = 1, IAvIA = 2;
 	private int variant;
 	public static int blanc = 0, bleu = 1, rouge = 2; // si en jvj, bleu = joueur 1 et rouge = joueur 2
-
+	
+	
+	
+	
 	private Model model;
 
 	public Game() {
@@ -87,7 +90,6 @@ public class Game {
 
 			this.model = new Model(Integer.parseInt(k));
 		}
-
 	}
 
 	private void fastParamBrave() {
@@ -148,7 +150,6 @@ public class Game {
 		} else if (ia == 1) {
 			this.variant = this.JvIA;
 		}
-
 	}
 
 	private void setGloutonne(boolean b) {

@@ -7,6 +7,11 @@ public class Plateau {
 	private int uncolored_nb;
 	public static int blanc = 0, bleu = 1, rouge = 2;
 
+	public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+	
+	
 	/*
 	 * Constructeur de Plateau
 	 * 
@@ -34,11 +39,11 @@ public class Plateau {
 			ArrayList<Integer> ligne = tableau.get(i);
 
 			for (int j = 0; j < ligne.size()-1; j++) {
-				if(ligne.get(i) == bleu) {
+				if(ligne.get(j) == bleu) {
 					System.out.print("B");
-				} else if(ligne.get(i) == rouge) {
+				} else if(ligne.get(j) == rouge) {
 					System.out.print("R");
-				} else if(ligne.get(i) == blanc) {
+				} else if(ligne.get(j) == blanc) {
 					System.out.print("A");
 				}
 				System.out.print(" , ");

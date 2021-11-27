@@ -135,17 +135,18 @@ public class Model {
 
 			Point p = getSmallRegionTopLeft(ligne, col);
 			if (isSmallRegionFull(p.gety(), p.getx())) {
-
+				
 				recoloringSmallRegion(p.gety(), p.getx(), couleur);
+				recoloringSmallRegionQuadTree(ligne, col, couleur, this.quadTree);
+				
 				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
-
+				System.out.println("fin premier");
+				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 			}
+			
+			
 		}
 		return true;
-	}
-
-	public void recoloringRegion() {
-
 	}
 
 	public void recolorationTemeraire(int ligne, int col, int couleur) {
@@ -209,7 +210,12 @@ public class Model {
 
 			if (rge + ble == 4) {
 				for (int i = 0; i < 4; i++) {
-					if (qt.getQt(i).getValue() != couleur) {						
+					System.out.println("Test couleur : " + qt.getQt(i).getValue() );
+					if (qt.getQt(i).getValue() != couleur) {
+						System.out.println("TEST nb recolo");
+						System.out.println("y = " + qt.getQt(i).getPoint().gety());
+						System.out.println("x = " + qt.getQt(i).getPoint().getx());
+						qt.setValue(couleur);
 						acquiringRegion(qt.getQt(i).getPoint().gety(), qt.getQt(i).getPoint().getx(), couleur, qt.getQt(i));
 					}
 				}
@@ -241,7 +247,7 @@ public class Model {
 		}
 		return true;
 	}
-
+	
 	public void recoloringSmallRegionQuadTree(int ligne, int col, int color, QuadTree father) {
 		if (father.getisSterile()) {
 			father.setValue(color);
@@ -262,9 +268,9 @@ public class Model {
 			}
 		}
 	}
-
+	
 	public void recoloringSmallRegion(int ligne, int col, int couleur) {
-		recoloringSmallRegionQuadTree(ligne, col, couleur, this.quadTree);
+		
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				plateau.changerValeur(ligne + i, col + j, couleur);
