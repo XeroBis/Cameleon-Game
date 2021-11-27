@@ -294,7 +294,7 @@ public class Model {
 								nbZoneMax = nbZone;
 								mvp.clear();
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
-							} else if (nbZone == nbZoneMax) {
+							} else if (nbZone == nbZoneMax && nbZoneMax != 0) {
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
 
 							} else if (nb > max && nbZoneMax == 0) {
@@ -307,7 +307,6 @@ public class Model {
 						}
 					}
 				}
-
 			}
 		}
 
@@ -324,7 +323,7 @@ public class Model {
 								nbZoneMax = nbZone;
 								mvp.clear();
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
-							} else if (nbZone == nbZoneMax) {
+							} else if (nbZone == nbZoneMax && nbZoneMax != 0) {
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
 
 							} else if (nb > max && nbZoneMax == 0) {
