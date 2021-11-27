@@ -93,7 +93,7 @@ public class Game {
 	private void fastParamBrave() {
 		this.isBrave = false;
 		this.isGloutonne = true;
-		this.variant = JvJ; // IA
+		this.variant = IAvIA; // IA
 	}
 
 	/*
@@ -172,12 +172,13 @@ public class Game {
 
 			System.out.println("JOUEUR 1 : ");
 			int[] coord = chooseCoordinate();
-			boolean play = this.model.colorationBrave(coord[1], coord[0], bleu);
+			boolean play;
+			play = this.playMove(coord[1], coord[0], bleu);
 			while (!play) {
 				System.out.println(
 						"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 				coord = chooseCoordinate();
-				play = this.model.colorationBrave(coord[1], coord[0], bleu);
+				play = this.playMove(coord[1], coord[0], bleu);
 			}
 			if (this.model.estTerminee()) {
 				playing = false;
@@ -302,7 +303,8 @@ public class Game {
 		System.out.print("Veuillez entrez un numero de colonne :");
 		res[0] = scan.nextInt();
 		while (res[0] > model.getSize() - 1 || res[0] < 0) {
-			System.out.println("Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize() + " exclus.");
+			System.out.println(
+					"Veuillez indiquez un numéro de colonne compris entre 0 et" + model.getSize() + " exclus.");
 			res[0] = scan.nextInt();
 		}
 		System.out.print("Veuillez entrez un numero de ligne :");

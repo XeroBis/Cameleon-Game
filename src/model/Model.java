@@ -134,13 +134,18 @@ public class Model {
 			recolorationTemeraire(ligne, col, couleur); // R2
 
 			Point p = getSmallRegionTopLeft(ligne, col);
-
 			if (isSmallRegionFull(p.gety(), p.getx())) {
+
 				recoloringSmallRegion(p.gety(), p.getx(), couleur);
 				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
+
 			}
 		}
 		return true;
+	}
+
+	public void recoloringRegion() {
+
 	}
 
 	public void recolorationTemeraire(int ligne, int col, int couleur) {
@@ -185,7 +190,7 @@ public class Model {
 	}
 
 	public void acquiringRegion(int ligne, int col, int couleur, QuadTree qt) {
-		if ((qt.getQt(0) == null) && (qt.getQt(1) == null) && (qt.getQt(2) == null) && (qt.getQt(3) == null)) {
+		if (qt.getisSterile()) {
 			qt.setValue(couleur);
 			recoloringSmallRegion(ligne, col, couleur);
 		} else {
@@ -199,12 +204,13 @@ public class Model {
 				if (qt.getQt(i).getValue() == QuadTree.bleu) {
 					ble++;
 				}
+
 			}
 
 			if (rge + ble == 4) {
 				for (int i = 0; i < 4; i++) {
-					if (qt.getQt(i).getValue() != couleur) {
-						acquiringRegion(ligne, col, couleur, qt.getQt(i));
+					if (qt.getQt(i).getValue() != couleur) {						
+						acquiringRegion(qt.getQt(i).getPoint().gety(), qt.getQt(i).getPoint().getx(), couleur, qt.getQt(i));
 					}
 				}
 			} else {
@@ -236,7 +242,29 @@ public class Model {
 		return true;
 	}
 
+	public void recoloringSmallRegionQuadTree(int ligne, int col, int color, QuadTree father) {
+		if (father.getisSterile()) {
+			father.setValue(color);
+		} else {
+			if (col >= father.getQt(2).getPoint().getx()) {
+				if (ligne >= father.getQt(2).getPoint().gety()) {
+					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(2));
+				} else {
+					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(1));
+				}
+			} else {
+				if (ligne >= father.getQt(2).getPoint().gety()) {
+					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(3));
+				} else {
+					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(0));
+				}
+
+			}
+		}
+	}
+
 	public void recoloringSmallRegion(int ligne, int col, int couleur) {
+		recoloringSmallRegionQuadTree(ligne, col, couleur, this.quadTree);
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				plateau.changerValeur(ligne + i, col + j, couleur);
@@ -261,14 +289,14 @@ public class Model {
 						if (plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
 							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
 							int nbZone = getNumberOfZoneTaken(p.gety() + i, p.getx() + j, color);
-							
+
 							if (nbZone > nbZoneMax) {
 								nbZoneMax = nbZone;
 								mvp.clear();
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
-							}else if (nbZone == nbZoneMax) {
+							} else if (nbZone == nbZoneMax) {
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
-								
+
 							} else if (nb > max && nbZoneMax == 0) {
 								mvp.clear();
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
@@ -291,14 +319,14 @@ public class Model {
 						if (plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
 							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
 							int nbZone = getNumberOfZoneTaken(p.gety() + i, p.getx() + j, color);
-							
+
 							if (nbZone > nbZoneMax) {
 								nbZoneMax = nbZone;
 								mvp.clear();
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
-							}else if (nbZone == nbZoneMax) {
+							} else if (nbZone == nbZoneMax) {
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
-								
+
 							} else if (nb > max && nbZoneMax == 0) {
 								mvp.clear();
 								mvp.add(new Point(p.getx() + j, p.gety() + i));
@@ -375,7 +403,7 @@ public class Model {
 	}
 
 	public int TestIfGetBiggerZone(QuadTree son) {
-		if(son.getFather() == null) {
+		if (son.getFather() == null) {
 			return 1;
 		}
 		QuadTree father = son.getFather();
@@ -386,14 +414,15 @@ public class Model {
 			}
 		}
 		if (nbZone == 3) { // on peut colorier une grande zone, donc on test le père
-			if(father.getFather() == null) {
+			if (father.getFather() == null) {
 				System.out.println("test");
 				return 4;
 			} else {
 				return 4 * TestIfGetBiggerZone(father);
 			}
 		} else {
-			return 1; // si on ne capture pas la grande zone alors on a capturer seulement une petite zone.
+			return 1; // si on ne capture pas la grande zone alors on a capturer seulement une petite
+						// zone.
 		}
 
 	}
@@ -413,8 +442,9 @@ public class Model {
 	// ******************** Fonctions générales ********************//
 
 	public void RemplirTableau(int ligne, int col, int couleur) {
-		this.colorationQuadTree(ligne, col, couleur);
+
 		this.coloration(ligne, col, couleur);
+		this.colorationQuadTree(ligne, col, couleur);
 	}
 
 	public void colorationQuadTree(int ligne, int col, int couleur) {
