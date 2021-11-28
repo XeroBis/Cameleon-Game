@@ -12,11 +12,11 @@ public class Main
 		//g.play(true); // on lance le jeu avec cette commmande
 		//System.out.print(System.getProperty("user.dir"));
 		
-		View view = new View("JEU", 1000, 1000);
+		
 		
 		java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-            	view.setVisible(true);
+            	new View("JEU", 1000, 1000);
             }
         });
 		

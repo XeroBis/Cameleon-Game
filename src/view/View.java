@@ -25,7 +25,7 @@ public class View extends JFrame implements KeyListener  {
 	public View(String title, int width, int height) {
 		super(title);
 		this.model = new Model();
-		this.controller = new Controller(this.model, this);
+		this.controller = new Controller(this);
 		setPreferredSize(new Dimension(width, height));
 		this.build();
 		this.setFocusable(true);
@@ -41,9 +41,8 @@ public class View extends JFrame implements KeyListener  {
 		setVisible(true);
 		
 	}
-	private void buildContent() {
+	public void buildContent() {
 		// 0 sur menu, 1 sur param, 2 sur pour les règles, 3 pour exit et 4 pour le jeux
-		System.out.println("test" + this.controller.getState());
 		if(this.controller.getState()==0) {
 			this.menuPanel = new MenuPanel(this);
 			this.menuPanel.setFocusable(true);
@@ -152,6 +151,16 @@ public class View extends JFrame implements KeyListener  {
 	
 	public Controller getController() {
 		return this.controller;
+	}
+	public Model getModel() {
+		return this.model;
+	}
+	
+	public void setBrave(boolean b) {
+		this.model.setBrave(b);
+	}
+	public void setVariante(int v) {
+		this.model.setVariante(v);
 	}
 
 }

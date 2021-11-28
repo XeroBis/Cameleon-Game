@@ -12,6 +12,9 @@ public class Model {
 
 	private ArrayList<Point> redPoints, bluePoints; // 2 tableau qui contiennent les points qui peuvent être pris.
 	private int redScore, blueScore; // les deux ints des scores.
+	private int variante; // 1 pour JvJ, 2 pour JvIA et 3 pour IAvIA
+	private boolean isGloutonne;
+	private boolean isBrave;
 
 	/*
 	 * constructeur de Model
@@ -22,6 +25,9 @@ public class Model {
 
 		this.redScore = 0;
 		this.blueScore = 0;
+		this.setVariante(0);
+		this.isGloutonne = true;
+		this.isBrave = true;
 	}
 
 	public Model(int k) {
@@ -32,6 +38,9 @@ public class Model {
 
 		this.redScore = 0;
 		this.blueScore = 0;
+		this.setVariante(0);
+		this.isGloutonne = true;
+		this.isBrave = true;
 	}
 
 	public void setNewK(int k) {
@@ -662,5 +671,29 @@ public class Model {
 			}
 		}
 		return nb;
+	}
+
+	public int getVariante() {
+		return variante;
+	}
+
+	public void setVariante(int variante) {
+		this.variante = variante;
+	}
+
+	public boolean isGloutonne() {
+		return isGloutonne;
+	}
+
+	public void setGloutonne(boolean isGloutonne) {
+		this.isGloutonne = isGloutonne;
+	}
+
+	public boolean isBrave() {
+		return isBrave;
+	}
+
+	public void setBrave(boolean isBrave) {
+		this.isBrave = isBrave;
 	}
 }

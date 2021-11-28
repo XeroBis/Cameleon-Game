@@ -5,18 +5,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import model.Model;
 import view.View;
 
 public class Controller implements ActionListener{
-	
-	private Model model;
+
 	private View view;
 	private int state; // 0 sur menu, 1 sur param, 2 sur pour les règles, 3 pour exit et 4 pour le jeux
 	
-	public Controller(Model model, View view){
+	public Controller(View view){
 		super();
-		this.model = model;
 		this.view = view;
 		this.setState(0);
 	}
@@ -25,25 +22,50 @@ public class Controller implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		
 		String o = ((JButton)e.getSource()).getName();
-		System.out.print(o);
 		
 		if(o == "MENU") {
 			this.setState(0);
-			this.view.build();
+			this.view.buildContent();
+			
 		} else if (o == "PARAM") {
 			this.setState(1);
-			this.view.build();
+			this.view.buildContent();
+			
 		} else if (o == "RULES") {
 			this.setState(2);
-			this.view.build();
+			this.view.buildContent();
+			
 		} else if (o == "EXIT"){
 			System.exit(0);
+			
 		} else if(o == "PLAY") {
 			this.setState(4);
-			this.view.build();
+			this.view.buildContent();
+			
+		} else if(o == "JvJ") {
+			this.view.setVariante(0);
+			this.view.buildContent();
+			
+		} else if(o == "JvIA") {
+			this.view.setVariante(1);
+			this.view.buildContent();
+			
+		} else if(o == "IAvIA") {
+			System.out.println("passe par la");
+			this.view.setVariante(2);
+			this.view.buildContent();
+			
+		} else if (o == "BRAVE") {
+			this.view.setBrave(true);
+			this.view.buildContent();
+			
+		} else if(o == "TEMERAIRE") {
+			this.view.setBrave(false);
+			this.view.buildContent();
+			
 		}
-		System.out.println("STATE : " + this.getState());
-		// TODO Auto-generated method stub
+		System.out.println(o);
+		
 		
 	}
 
