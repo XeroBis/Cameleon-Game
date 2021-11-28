@@ -290,8 +290,8 @@ public class Model {
 		}
 	}
 
-	public void botTemeraireGlouton(int color) {
-		actualizingArrayPoints();
+	public Point getBestMoveTemeraire(int color) {
+		this.actualizingArrayPointsTemeraire();
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
@@ -362,9 +362,14 @@ public class Model {
 		} else {
 			p = mvp.get((int) (Math.random() * mvp.size()));
 		}
-		this.colorationTemeraire(p.gety(), p.getx(), color);
-		updateScoreTemeraire();
-		actualizingArrayPointsTemeraire();
+		return p;
+	}
+	
+	public void botTemeraireGlouton(int color) {
+		Point bestMove = getBestMoveTemeraire(color);
+		this.colorationTemeraire(bestMove.gety(), bestMove.getx(), color);
+		this.updateScoreTemeraire();
+		this.actualizingArrayPointsTemeraire();
 	}
 
 	public void updateScoreTemeraire() {
