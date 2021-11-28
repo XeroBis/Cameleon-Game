@@ -461,6 +461,7 @@ public class Model {
 		return caseColorie;
 	}
 
+
 	// ******************** Fonctions générales ********************//
 
 	public void RemplirTableau(int ligne, int col, int couleur) {
@@ -622,11 +623,6 @@ public class Model {
 		removePoints.clear();
 		*/
 		
-		
-		
-		
-		
-		
 	}
 
 	public boolean hasFreeNeighbor(int ligne, int col) {
@@ -667,5 +663,4 @@ public class Model {
 		}
 		return nb;
 	}
-
 }
