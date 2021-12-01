@@ -107,7 +107,7 @@ public class Model {
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
-						int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
+						int nb = nbOpponentColorBrave(p.gety() + i, p.getx() + j, color);
 						if (nb > max && plateau.couleurCase(p.gety() + i, p.getx() + j) != -1
 								&& plateau.couleurCase(p.gety() + i, p.getx() + j) == 0) {
 							mvp.clear();
@@ -141,8 +141,9 @@ public class Model {
 			coloration(ligne, col, couleur); // R1
 			recolorationTemeraire(ligne, col, couleur); // R2
 
-			Point p = getSmallRegionTopLeft(ligne, col);
 			int size = 3;
+			Point p = getTopLeftPointOfRegion(ligne, col, size);
+			
 			boolean isRegionFull = isRegionFull(p.gety(), p.getx(), size);
 
 			while (isRegionFull) {
@@ -156,9 +157,9 @@ public class Model {
 					
 					// p = point  angle haut gauche de la plus grande régions
 					size = size * 2;
-					p = this.getPointOfBiggerZone(ligne, col, size);
-					// on retestre si la région au dessus est pleine
-					isRegionFull = isRegionFull(p.gety(), p.getx(), size);
+					p = this.getTopLeftPointOfRegion(ligne, col, size);
+					
+					isRegionFull = isRegionFull(p.gety(), p.getx(), size); // on test si la région au dessus est pleine
 				}
 
 			}
@@ -168,7 +169,11 @@ public class Model {
 		return true;
 	}
 	
-	public Point getPointOfBiggerZone(int ligne, int col, int size) {
+	
+	/*
+	 * fonction permettant de récupérer les coordonées du coin haut gauche de la région dont la taille est size et donc la région contient le point de coordonées ligne, col
+	 */
+	public Point getTopLeftPointOfRegion(int ligne, int col, int size) {
 		int x = col - (col % size);
 		int y = ligne - (ligne % size);
 		return new Point(x, y);
@@ -188,6 +193,10 @@ public class Model {
 		}
 	}
 
+	
+	/*
+	 * Fonction permettant de savoir si un point de coordonnées ligne, col et locked, c'est à dire si la région à laquelle il appartient est complète
+	 */
 	public boolean isNotLock(int ligne, int col, QuadTree qt) {
 		if (qt.getisSterile()) {
 			return qt.getValue() == QuadTree.blanc;
@@ -208,12 +217,6 @@ public class Model {
 				}
 			}
 		}
-	}
-
-	public Point getSmallRegionTopLeft(int ligne, int col) {
-		int x = col - (col % 3);
-		int y = ligne - (ligne % 3);
-		return new Point(x, y);
 	}
 
 	/*
@@ -253,6 +256,9 @@ public class Model {
 
 	}
 
+	/*
+	 * Fonction permettant de savoir si une region est pleine 
+	 */
 	public boolean isRegionFull(int ligne, int col, int size) {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -282,6 +288,9 @@ public class Model {
 		}
 	}
 
+	/*
+	 * Fonction permettant de récupérer le meilleur move en terme de différence de point avec l'adversaire
+	 */
 	public Point getBestMoveTemeraire(int color) {
 		this.actualizingArrayPointsTemeraire();
 		ArrayList<Point> mvp = new ArrayList<Point>();
@@ -297,7 +306,7 @@ public class Model {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
 						if (plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
-							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
+							int nb = nbOpponentColorBrave(p.gety() + i, p.getx() + j, color);
 							int nbZone = getNumberOfZoneTaken(p.gety() + i, p.getx() + j, color);
 
 							if (nbZone > nbZoneMax) {
@@ -326,7 +335,7 @@ public class Model {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
 						if (plateau.couleurCase(p.gety() + i, p.getx() + j) == this.plateau.blanc) {
-							int nb = nbOpponentColor(p.gety() + i, p.getx() + j, color);
+							int nb = nbOpponentColorBrave(p.gety() + i, p.getx() + j, color);
 							int nbZone = getNumberOfZoneTaken(p.gety() + i, p.getx() + j, color);
 
 							if (nbZone > nbZoneMax) {
@@ -357,6 +366,25 @@ public class Model {
 		return p;
 	}
 
+	
+	public int nbOpponentColorTemeraire(int ligne, int col, int couleur) {
+		int nb = 0;
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if ((plateau.couleurCase(ligne + i, col + j) != -1)
+						&& (plateau.couleurCase(ligne + i, col + j) != couleur)
+						&& (plateau.couleurCase(ligne + i, col + j) != 0) && isNotLock(ligne + i, col + j, quadTree)) {
+					nb++;
+				}
+			}
+		}
+		return nb;
+	}
+
+	
+	/*
+	 * Fonction qui joue l'action du bot
+	 */
 	public void botTemeraireGlouton(int color) {
 		Point bestMove = getBestMoveTemeraire(color);
 		this.colorationTemeraire(bestMove.gety(), bestMove.getx(), color);
@@ -451,6 +479,34 @@ public class Model {
 		}
 		return caseColorie;
 	}
+	
+	
+	public void actualizingArrayPointsTemeraire() {
+		Point p;
+		int size = this.redPoints.size();
+		for (int i = 0; i < size; i++) {
+			p = this.redPoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu
+					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
+				this.redPoints.remove(i);
+				size--;
+				i--;
+			}
+		}
+
+		size = this.bluePoints.size();
+		for (int i = 0; i < size; i++) {
+			p = this.bluePoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge
+					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
+				this.bluePoints.remove(i);
+				size--;
+				i--;
+			}
+		}
+	}
+
+	
 
 	// ******************** Fonctions générales ********************//
 
@@ -598,30 +654,6 @@ public class Model {
 		}
 	}
 
-	public void actualizingArrayPointsTemeraire() {
-		Point p;
-		int size = this.redPoints.size();
-		for (int i = 0; i < size; i++) {
-			p = this.redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu
-					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
-				this.redPoints.remove(i);
-				size--;
-				i--;
-			}
-		}
-
-		size = this.bluePoints.size();
-		for (int i = 0; i < size; i++) {
-			p = this.bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge
-					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
-				this.bluePoints.remove(i);
-				size--;
-				i--;
-			}
-		}
-	}
 
 	public boolean hasFreeNeighbor(int ligne, int col) {
 		for (int i = -1; i < 2; i++) {
@@ -634,7 +666,7 @@ public class Model {
 		return false;
 	}
 
-	public int nbOpponentColor(int ligne, int col, int couleur) {
+	public int nbOpponentColorBrave(int ligne, int col, int couleur) {
 		int nb = 0;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
@@ -648,19 +680,6 @@ public class Model {
 		return nb;
 	}
 
-	public int nbOpponentColorTemeraire(int ligne, int col, int couleur) {
-		int nb = 0;
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
-				if ((plateau.couleurCase(ligne + i, col + j) != -1)
-						&& (plateau.couleurCase(ligne + i, col + j) != couleur)
-						&& (plateau.couleurCase(ligne + i, col + j) != 0) && isNotLock(ligne + i, col + j, quadTree)) {
-					nb++;
-				}
-			}
-		}
-		return nb;
-	}
 
 	public QuadTree getQuadTree() {
 		return this.quadTree;
