@@ -12,7 +12,6 @@ public class Model {
 
 	private ArrayList<Point> redPoints, bluePoints; // 2 tableau qui contiennent les points qui peuvent être pris.
 	private int redScore, blueScore; // les deux ints des scores.
-	private int variante; // 1 pour JvJ, 2 pour JvIA et 3 pour IAvIA
 	private boolean isGloutonne;
 	private boolean isBrave;
 
@@ -25,7 +24,6 @@ public class Model {
 
 		this.redScore = 0;
 		this.blueScore = 0;
-		this.setVariante(0);
 		this.isGloutonne = true;
 		this.isBrave = true;
 	}
@@ -38,20 +36,20 @@ public class Model {
 
 		this.redScore = 0;
 		this.blueScore = 0;
-		this.setVariante(0);
 		this.isGloutonne = true;
 		this.isBrave = true;
 	}
 
 	public void setNewK(int k) {
 		this.plateau = new Plateau(k);
-		this.quadTree = buildingQT(null, k, new Point(0, 0));
 		this.size = 3 * (int) Math.pow(2, k);
+		this.quadTree = buildingQT(null, k, new Point(0, 0), 3 * (int) Math.pow(2, k));
+
 	}
 
-	private QuadTree buildingQT(QuadTree father, int k, Point p) {
+	private QuadTree buildingQT(QuadTree father, int k, Point p, int size) {
 		if (k == 0) {
-			return new QuadTree(father, true, QuadTree.blanc, p, null, null, null, null);
+			return new QuadTree(father, true, QuadTree.blanc, p, null, null, null, null, size);
 		} else {
 			int dim = (int) (3 * Math.pow(2, k));
 
@@ -59,12 +57,13 @@ public class Model {
 			Point p2 = new Point(p.getx() + dim / 2, p.gety() + dim / 2);
 			Point p3 = new Point(p.getx(), p.gety() + dim / 2);
 
-			return new QuadTree(null, false, QuadTree.blanc, p, buildingQT(father, k - 1, p),
-					buildingQT(father, k - 1, p1), buildingQT(father, k - 1, p2), buildingQT(father, k - 1, p3));
+			return new QuadTree(null, false, QuadTree.blanc, p, buildingQT(father, k - 1, p, size / 2),
+					buildingQT(father, k - 1, p1, size / 2), buildingQT(father, k - 1, p2, size / 2),
+					buildingQT(father, k - 1, p3, size), size);
 		}
 	}
 
-	// ******************** Fonctions pour le mode de jeu "Brave"
+	// ******************** Fonctions pour le mode de jeu "Brave" //
 	// ********************//
 
 	public boolean colorationBrave(int ligne, int col, int couleur) {
@@ -135,7 +134,6 @@ public class Model {
 	// ********************//
 
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
-		System.out.println("taille pts red :" + this.redPoints.size() + ", taille pts bleu :" + this.bluePoints.size());
 		if (plateau.couleurCase(ligne, col) != this.plateau.blanc) {
 			System.out.println("Mouvement Interdit !");
 			return false;
@@ -144,20 +142,39 @@ public class Model {
 			recolorationTemeraire(ligne, col, couleur); // R2
 
 			Point p = getSmallRegionTopLeft(ligne, col);
-			if (isSmallRegionFull(p.gety(), p.getx())) {
+			int size = 3;
+			boolean isRegionFull = isRegionFull(p.gety(), p.getx(), size);
 
-				recoloringSmallRegion(p.gety(), p.getx(), couleur);
-				recoloringSmallRegionQuadTree(ligne, col, couleur, this.quadTree);
+			while (isRegionFull) {
+				if (size == this.size) {
+					this.acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree, size);
+					isRegionFull = false;
+				} else {
+					
+					// appel une fonction pour réécrir le plateau et l'arbre
+					this.acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree, size);
+					
+					// p = point  angle haut gauche de la plus grande régions
+					size = size * 2;
+					p = this.getPointOfBiggerZone(ligne, col, size);
+					// on retestre si la région au dessus est pleine
+					isRegionFull = isRegionFull(p.gety(), p.getx(), size);
+				}
 
-				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
-				System.out.println("fin premier");
-				acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
 			}
+			this.updateScoreTemeraire();
 
 		}
 		return true;
 	}
+	
+	public Point getPointOfBiggerZone(int ligne, int col, int size) {
+		int x = col - (col % size);
+		int y = ligne - (ligne % size);
+		return new Point(x, y);
+	}
 
+	
 	public void recolorationTemeraire(int ligne, int col, int couleur) {
 		for (int i = ligne - 1; i < ligne + 2; i++) {
 			if (i >= 0 && i < this.size) {
@@ -171,7 +188,6 @@ public class Model {
 		}
 	}
 
-	
 	public boolean isNotLock(int ligne, int col, QuadTree qt) {
 		if (qt.getisSterile()) {
 			return qt.getValue() == QuadTree.blanc;
@@ -200,67 +216,46 @@ public class Model {
 		return new Point(x, y);
 	}
 
-	public void acquiringRegion(int ligne, int col, int couleur, QuadTree qt) {
-		if (qt.getisSterile()) {
-			qt.setValue(couleur);
-			recoloringSmallRegion(ligne, col, couleur);
-		} else {
-			int rge = 0;
-			int ble = 0;
-
-			for (int i = 0; i < 4; i++) {
-				if (qt.getQt(i).getValue() == QuadTree.rouge) {
-					rge++;
-				}
-				if (qt.getQt(i).getValue() == QuadTree.bleu) {
-					ble++;
-				}
-
-			}
-
-			if (rge + ble == 4) {
-				for (int i = 0; i < 4; i++) {
-					if (qt.getQt(i).getValue() != couleur) {
-						if (couleur == this.plateau.bleu) {
-							if (rge > ble) {
-								qt.setValue(2);
-							} else {
-								qt.setValue(couleur);
-							}
-						} else if (couleur == this.plateau.rouge) {
-							System.out.println("valeur bleu: " + ble + ", valeur rouge :" + rge);
-							if (ble > rge) {
-								qt.setValue(1);
-							} else {
-								qt.setValue(couleur);
-							}
-						}
-						qt.setValue(couleur);
-						acquiringRegion(qt.getQt(i).getPoint().gety(), qt.getQt(i).getPoint().getx(), couleur,
-								qt.getQt(i));
+	/*
+	 * Fonction permettant la capture des zones et donc du changement de valeur dans le tableau de cases.
+	 */
+	public void acquiringRegion(int ligne, int col, int couleur, QuadTree quadTree, int size) {
+		if (quadTree != null) {
+			if (quadTree.getisSterile()) {
+				if (this.isRegionFull(ligne, col, size)) {
+					if (this.hasMorePiece(ligne, col, couleur, size)) {
+						quadTree.setValue(couleur);
+						recoloringRegionPlateau(ligne, col, couleur, size);
+					} else {
+						quadTree.setValue(this.getOppositeColor(couleur));
+						recoloringRegionPlateau(ligne, col, this.getOppositeColor(couleur), size);
 					}
+					quadTree.setIsSterile(true);
+					quadTree.deleteSons();
 				}
 			} else {
-				if (col >= qt.getQt(2).getPoint().getx()) {
-					if (ligne >= qt.getQt(2).getPoint().gety()) {
-						acquiringRegion(ligne, col, couleur, qt.getQt(2));
+				if (col >= quadTree.getQt(2).getPoint().getx()) {
+					if (ligne >= this.quadTree.getQt(2).getPoint().gety()) {
+						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(2), size);
 					} else {
-						acquiringRegion(ligne, col, couleur, qt.getQt(1));
+						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(1), size);
 					}
 				} else {
-					if (ligne >= qt.getQt(2).getPoint().gety()) {
-						acquiringRegion(ligne, col, couleur, qt.getQt(3));
+					if (ligne >= quadTree.getQt(2).getPoint().gety()) {
+						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(3), size);
 					} else {
-						acquiringRegion(ligne, col, couleur, qt.getQt(0));
+						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(0), size);
 					}
 				}
+
 			}
 		}
+
 	}
 
-	public boolean isSmallRegionFull(int ligne, int col) {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
+	public boolean isRegionFull(int ligne, int col, int size) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				if (plateau.couleurCase(ligne + i, col + j) == Plateau.blanc) {
 					return false;
 				}
@@ -269,32 +264,20 @@ public class Model {
 		return true;
 	}
 
-	public void recoloringSmallRegionQuadTree(int ligne, int col, int color, QuadTree father) {
-		if (father.getisSterile()) {
-			father.setValue(color);
-		} else {
-			if (col >= father.getQt(2).getPoint().getx()) {
-				if (ligne >= father.getQt(2).getPoint().gety()) {
-					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(2));
-				} else {
-					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(1));
+	/*
+	 * fonction qui sert à recolorier le plateau de la coordonnée ligne, col sur un
+	 * carré de size x size
+	 */
+	public void recoloringRegionPlateau(int ligne, int col, int couleur, int size) {
+
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (ligne + i < this.size && col + j < this.size) {
+					int posl = ligne + i;
+					int posc = col + j;
+					System.out.println("test, size : " + size + ",  quelle coorrd recoloriée : x = "+ posl + ", y = " + posc);
+					plateau.changerValeur(ligne + i, col + j, couleur);
 				}
-			} else {
-				if (ligne >= father.getQt(2).getPoint().gety()) {
-					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(3));
-				} else {
-					recoloringSmallRegionQuadTree(ligne, col, color, father.getQt(0));
-				}
-
-			}
-		}
-	}
-
-	public void recoloringSmallRegion(int ligne, int col, int couleur) {
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				plateau.changerValeur(ligne + i, col + j, couleur);
 			}
 		}
 	}
@@ -373,7 +356,7 @@ public class Model {
 		}
 		return p;
 	}
-	
+
 	public void botTemeraireGlouton(int color) {
 		Point bestMove = getBestMoveTemeraire(color);
 		this.colorationTemeraire(bestMove.gety(), bestMove.getx(), color);
@@ -446,7 +429,6 @@ public class Model {
 		}
 		if (nbZone == 3) { // on peut colorier une grande zone, donc on test le père
 			if (father.getFather() == null) {
-				System.out.println("test");
 				return 4;
 			} else {
 				return 4 * TestIfGetBiggerZone(father);
@@ -470,22 +452,65 @@ public class Model {
 		return caseColorie;
 	}
 
-
 	// ******************** Fonctions générales ********************//
 
+	/*
+	 * Fonction seulement utilisé si on charge un fichier
+	 */
 	public void RemplirTableau(int ligne, int col, int couleur) {
-
 		this.coloration(ligne, col, couleur);
-		this.colorationQuadTree(ligne, col, couleur);
 	}
 
-	public void colorationQuadTree(int ligne, int col, int couleur) {
-		Point p = getSmallRegionTopLeft(ligne, col);
-
-		if (isSmallRegionFull(p.gety(), p.getx())) {
-			recoloringSmallRegion(p.gety(), p.getx(), couleur);
-			acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree);
+	/*
+	 * Fonction seulement utilisé si on charge un fichier
+	 */
+	public void RemplirQuadTree(QuadTree quadTree) {
+		Point p = quadTree.getPoint();
+		if (this.isRegionFull(p.gety(), p.getx(), quadTree.getSize())) {
+			quadTree.setValue(this.plateau.couleurCase(p.gety(), p.getx()));
+			quadTree.setIsSterile(true);
+			quadTree.deleteSons();
+		} else {
+			if (!quadTree.getisSterile()) {
+				RemplirQuadTree(quadTree.getQt(0));
+				RemplirQuadTree(quadTree.getQt(1));
+				RemplirQuadTree(quadTree.getQt(2));
+				RemplirQuadTree(quadTree.getQt(3));
+			}
 		}
+	}
+
+
+	public boolean hasMorePiece(int ligne, int col, int couleur, int size) {
+		int bleu = 0;
+		int rouge = 0;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (ligne + i < this.size && col + j < this.size) {
+					int color = this.plateau.couleurCase(ligne + i, col + j);
+					if (color == Plateau.rouge) {
+						rouge++;
+					} else if (color == Plateau.bleu) {
+						bleu++;
+					}
+				}
+			}
+		}
+
+		if (couleur == Plateau.rouge) {
+			if (bleu > rouge) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			if (rouge > bleu) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
 	}
 
 	public void coloration(int ligne, int col, int couleur) {
@@ -550,88 +575,52 @@ public class Model {
 		System.out.println("rouge : " + redScore + "; bleu : " + blueScore);
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	public void actualizingArrayPoints() {
-
-		Point p;
-		ArrayList<Integer> removePoints = new ArrayList<Integer>();
-		for (int i = redPoints.size() - 1; i >= 0; i--) {
-			p = redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 2) {
-				removePoints.add(i);
-			}
-		}
-		for (int i = 0; i < removePoints.size(); i++) {
-			redPoints.remove(removePoints.get(i));
-		}
-		removePoints.clear();
-
-		for (int i = bluePoints.size() - 1; i >= 0; i--) {
-			p = bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) != 1) {
-				removePoints.add(i);
-			}
-		}
-		for (int i = 0; i < removePoints.size(); i++) {
-			this.bluePoints.remove(removePoints.get(i));
-		}
-		removePoints.clear();
-	}
-
-	@SuppressWarnings("unlikely-arg-type")
-	public void actualizingArrayPointsTemeraire() {
 		Point p;
 		int size = this.redPoints.size();
-		for(int i =0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			p = this.redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.bleu || !isNotLock(p.gety(), p.getx(), quadTree)) {
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu) {
 				this.redPoints.remove(i);
 				size--;
 				i--;
 			}
 		}
-		
+
 		size = this.bluePoints.size();
-		for(int i =0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			p = this.bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.rouge || !isNotLock(p.gety(), p.getx(), quadTree)) {
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge) {
 				this.bluePoints.remove(i);
 				size--;
 				i--;
 			}
 		}
-		
-		
-		
-		
-		/*
-		ArrayList<Integer> removePoints = new ArrayList<Integer>();
-		
-		for (int i = redPoints.size() - 1; i >= 0; i--) {
-			p = redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.bleu
-					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
-				removePoints.add(i);
-			}
-		}
-		for (int i = 0; i < removePoints.size(); i++) {
-			redPoints.remove(removePoints.get(i));
-		}
-		removePoints.clear();	
+	}
 
-		for (int i = bluePoints.size() - 1; i >= 0; i--) {
-			p = bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == this.plateau.rouge
+	public void actualizingArrayPointsTemeraire() {
+		Point p;
+		int size = this.redPoints.size();
+		for (int i = 0; i < size; i++) {
+			p = this.redPoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu
 					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
-				removePoints.add(i);
+				this.redPoints.remove(i);
+				size--;
+				i--;
 			}
 		}
-		for (int i = 0; i < removePoints.size(); i++) {
-			this.bluePoints.remove(removePoints.get(i));
+
+		size = this.bluePoints.size();
+		for (int i = 0; i < size; i++) {
+			p = this.bluePoints.get(i);
+			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge
+					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
+				this.bluePoints.remove(i);
+				size--;
+				i--;
+			}
 		}
-		removePoints.clear();
-		*/
-		
 	}
 
 	public boolean hasFreeNeighbor(int ligne, int col) {
@@ -673,12 +662,16 @@ public class Model {
 		return nb;
 	}
 
-	public int getVariante() {
-		return variante;
+	public QuadTree getQuadTree() {
+		return this.quadTree;
 	}
 
-	public void setVariante(int variante) {
-		this.variante = variante;
+	public int getOppositeColor(int couleur) {
+		if (couleur == Plateau.rouge) {
+			return Plateau.bleu;
+		} else {
+			return Plateau.rouge;
+		}
 	}
 
 	public boolean isGloutonne() {

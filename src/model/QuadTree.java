@@ -6,12 +6,14 @@ public class QuadTree {
 	private QuadTree qt0, qt1, qt2, qt3;
 	private QuadTree father;
 	private boolean isSterile;
+	private int size;
 	public static int blanc = 0, bleu = 1, rouge = 2;
 
 	/*
 	 * Constructeur de QuadTree
 	 */
 	public QuadTree() {
+		this.size = 3;
 		this.isSterile = false;
 		this.father = null;
 		this.value = null;
@@ -31,7 +33,8 @@ public class QuadTree {
 	 * 
 	 * @param qt0, qt1, qt2 et qt3, les 4 sous-zones.
 	 */
-	public QuadTree(QuadTree father, boolean isSterile,Integer value, Point point, QuadTree qt0, QuadTree qt1, QuadTree qt2, QuadTree qt3) {
+	public QuadTree(QuadTree father, boolean isSterile,Integer value, Point point, QuadTree qt0, QuadTree qt1, QuadTree qt2, QuadTree qt3, int size) {
+		this.size = size;
 		this.father = father;
 		this.isSterile = isSterile;
 		this.value = value;
@@ -69,6 +72,22 @@ public class QuadTree {
 		}
 	}
 
+	public void setSize(int size) {
+		this.size = size;
+	}
+	public int getSize() {
+		return this.size;
+	}
+	
+	public void setIsSterile(boolean isSterile) {
+		this.isSterile = isSterile;
+	}
+	public boolean getIsSterile() {
+		return this.isSterile;
+	}
+	
+	
+	
 	public void setValue(Integer newValue) {
 		this.value = newValue;
 	}
@@ -101,6 +120,13 @@ public class QuadTree {
 			System.out.println("Pas le bon choix d'index, doit etre compris entre 0 et 3 (inclus)");
 		}
 		return ret;
+	}
+	
+	public void deleteSons() {
+		this.qt0 = null;
+		this.qt1 = null;
+		this.qt2 = null;
+		this.qt3 = null;
 	}
 
 	public int getValue() {

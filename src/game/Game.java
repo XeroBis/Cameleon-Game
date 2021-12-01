@@ -115,9 +115,11 @@ public class Game {
 		if (version == 0) {
 			System.out.println("Vous avez donc choisi la version Brave !");
 			this.setBrave(true);
+			this.model.actualizingArrayPoints();
 		} else {
 			System.out.println("Vous avez donc choisi la version Téméraire !");
 			this.setBrave(false);
+			this.model.actualizingArrayPointsTemeraire();
 		}
 
 		int ia = 0;
@@ -188,6 +190,7 @@ public class Game {
 			}
 			if (this.model.estTerminee()) {
 				playing = false;
+				this.to_string();
 			} else {
 				this.to_string();
 				System.out.println("JOUEUR 2 : ");
@@ -372,6 +375,7 @@ public class Game {
 			}
 			ligne++;
 		}
+		this.model.RemplirQuadTree(this.model.getQuadTree());
 		reader.close();
 	}
 
