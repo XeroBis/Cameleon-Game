@@ -38,60 +38,11 @@ public class Game {
 		} else if (this.variant == JvJ) {
 			this.playJvJ();
 		} else if (this.variant == IAvIA) {
-			this.plauIAvIA();
+			this.playIAvIA();
 		}
 	}
 
-	/*
-	 * fonction permettant le chargement d'un fichier txt afin de repmplir le
-	 * plateau, on peut aussi décider de ne pas joindre de fichier et nous devrons
-	 * dans ce cas donner un k
-	 */
-	private void loadFiles() {
-		Scanner scan = new Scanner(System.in);
-
-		boolean choose = true;
-		boolean preload = false;
-
-		while (choose) {
-			System.out.print("Voulez vous charger un plateau (y/n) : ");
-			String resp = scan.next();
-			System.out.println();
-
-			switch (resp) {
-			case "y":
-				preload = true;
-				choose = false;
-				break;
-			case "n":
-				preload = false;
-				choose = false;
-				break;
-			default:
-				System.out.println("Reponse non valide, seuls 'y' et 'n' sont valides");
-				break;
-			}
-		}
-
-		if (preload) { // donc on load un fichier
-
-			System.out.print("entrez un nom de fichier : ");
-			String name = scan.next();
-			try {
-				readTextFile(name);
-			} catch (IOException e) {
-				System.out.println("Fichier n'existe pas");
-				e.printStackTrace();
-			}
-
-		} else { // on load rien
-			System.out.print("entrez la taille du plateau k (dans la formule 3 * 2 ^ k) : ");
-			String k = scan.next();
-
-			this.model = new Model(Integer.parseInt(k));
-		}
-	}
-
+	
 	private void fastParamBrave() {
 		this.isBrave = false;
 		this.isGloutonne = true;
@@ -115,7 +66,7 @@ public class Game {
 		if (version == 0) {
 			System.out.println("Vous avez donc choisi la version Brave !");
 			this.setBrave(true);
-			this.model.actualizingArrayPoints();
+			this.model.actualizingArrayPointsBrave();
 		} else {
 			System.out.println("Vous avez donc choisi la version Téméraire !");
 			this.setBrave(false);
@@ -168,9 +119,9 @@ public class Game {
 	private void endOfGame() {
 		System.out.println("Fin de la partie !");
 	}
-
+	// **************************************** Fonction qui joue la partie **************************************** //
 	/*
-	 * fonction lançant une partie Joueur versus Joueur
+	 * @purpose Fonction lançant une partie Joueur versus Joueur
 	 */
 	public void playJvJ() {
 		boolean playing = true;
@@ -215,7 +166,7 @@ public class Game {
 	}
 
 	/*
-	 * Fonction permettant à un joueur de jouer contre une IA
+	 * @purpose Fonction permettant à un joueur de jouer contre une IA
 	 */
 	public void playIAvJ() {
 		boolean playing = true;
@@ -251,8 +202,11 @@ public class Game {
 		}
 		this.to_string();
 	}
-
-	void plauIAvIA() {
+	
+	/*
+	 * @purpose Fonction permettant de lancer une partie avec deux IA
+	 */
+	public void playIAvIA() {
 		boolean playing = true;
 		while (playing) {
 			if (this.isBrave) {
@@ -292,9 +246,9 @@ public class Game {
 	}
 
 	/*
-	 * Fonction permettant au joueur de jouer un tour
+	 * @purpose Fonction permettant au joueur de jouer un tour
 	 */
-	public boolean playMove(int i, int j, int couleur) {
+	private boolean playMove(int i, int j, int couleur) {
 		if (this.isBrave) {
 			return this.model.colorationBrave(i, j, couleur);
 		} else {
@@ -303,7 +257,7 @@ public class Game {
 	}
 
 	/*
-	 * fonction permettant le choix, par l'utilisateur des coordonnées de son
+	 * @purpose fonction permettant le choix, par l'utilisateur des coordonnées de son
 	 * prochain coup
 	 * 
 	 * @return int[], le tableau contenant les 2 coordonnées choisie du joueur
@@ -329,16 +283,72 @@ public class Game {
 	}
 
 	/*
-	 * change la valeur du boolean Brave
-	 * 
-	 * @param brave, si la version du jeu est brave
+	 * @purpose change la valeur du boolean Brave
+	 * @param brave, boolean si la version du jeu est brave
+	 * @complexity O(1)
 	 */
 	private void setBrave(boolean brave) {
 		isBrave = brave;
 	}
 
+	
+	
+	// **************************************** Fonctions pour charger un fichier ****************************************//
+	
 	/*
-	 * fonction permettant de lire un fichier txt et de remplir notre plateau avec
+	 * @purpose fonction permettant le chargement d'un fichier txt afin de remplir le
+	 * plateau, on peut aussi décider de ne pas joindre de fichier et nous devrons
+	 * dans ce cas donner un k
+	 */
+	private void loadFiles() {
+		Scanner scan = new Scanner(System.in);
+
+		boolean choose = true;
+		boolean preload = false;
+
+		while (choose) {
+			System.out.print("Voulez vous charger un plateau (y/n) : ");
+			String resp = scan.next();
+			System.out.println();
+
+			switch (resp) {
+			case "y":
+				preload = true;
+				choose = false;
+				break;
+			case "n":
+				preload = false;
+				choose = false;
+				break;
+			default:
+				System.out.println("Reponse non valide, seuls 'y' et 'n' sont valides");
+				break;
+			}
+		}
+
+		if (preload) { // donc on load un fichier
+
+			System.out.print("entrez un nom de fichier : ");
+			String name = scan.next();
+			try {
+				readTextFile(name);
+			} catch (IOException e) {
+				System.out.println("Fichier n'existe pas");
+				e.printStackTrace();
+			}
+
+		} else { // on load rien
+			System.out.print("entrez la taille du plateau k (dans la formule 3 * 2 ^ k) : ");
+			String k = scan.next();
+
+			this.model = new Model(Integer.parseInt(k));
+		}
+	}
+
+	
+	
+	/*
+	 * @purpose fonction permettant de lire un fichier txt et de remplir notre plateau avec
 	 * les données contenu dans ce fichier
 	 */
 	public void readTextFile(String filename) throws IOException {

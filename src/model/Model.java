@@ -3,8 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Model {
-	// ******************** Attributs et Constructeurs de la classe Model
-	// ********************//
+	// **************************************** Attributs et Constructeurs de la classe Model **************************************** //
 
 	private Plateau plateau; // le plateau de jeu.
 	private QuadTree quadTree; // l'arbre pour les régions.
@@ -63,8 +62,7 @@ public class Model {
 		}
 	}
 
-	// ******************** Fonctions pour le mode de jeu "Brave" //
-	// ********************//
+	// **************************************** Fonctions pour le mode de jeu "Brave" ****************************************//
 
 	public boolean colorationBrave(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0 || ligne < 0 || ligne >= size || col < 0 || col >= size) {
@@ -91,7 +89,7 @@ public class Model {
 	}
 
 	public void botBraveGlouton(int color) {
-		actualizingArrayPoints();
+		actualizingArrayPointsBrave();
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
@@ -127,11 +125,58 @@ public class Model {
 			p = mvp.get((int) (Math.random() * mvp.size()));
 		}
 		colorationBrave(p.gety(), p.getx(), color);
-		actualizingArrayPoints();
+		actualizingArrayPointsBrave();
 	}
 
-	// ******************** Fonctions pour le mode de jeu "Téméraire"
-	// ********************//
+	public void actualizingArrayPointsBrave() {
+		Point p;
+		int size = this.redPoints.size();
+		for (int i = 0; i < size; i++) {
+			p = this.redPoints.get(i);
+			if (!hasFreeNeighborBrave(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu) {
+				this.redPoints.remove(i);
+				size--;
+				i--;
+			}
+		}
+
+		size = this.bluePoints.size();
+		for (int i = 0; i < size; i++) {
+			p = this.bluePoints.get(i);
+			if (!hasFreeNeighborBrave(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge) {
+				this.bluePoints.remove(i);
+				size--;
+				i--;
+			}
+		}
+	}
+
+	public int nbOpponentColorBrave(int ligne, int col, int couleur) {
+		int nb = 0;
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if ((plateau.couleurCase(ligne + i, col + j) != -1)
+						&& (plateau.couleurCase(ligne + i, col + j) != couleur)
+						&& (plateau.couleurCase(ligne + i, col + j) != 0)) {
+					nb++;
+				}
+			}
+		}
+		return nb;
+	}
+
+	public boolean hasFreeNeighborBrave(int ligne, int col) {
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if (plateau.couleurCase(ligne + i, col + j) == 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	// **************************************** Fonctions pour le mode de jeu "Téméraire" **************************************** //
 
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != this.plateau.blanc) {
@@ -169,7 +214,6 @@ public class Model {
 		return true;
 	}
 	
-	
 	/*
 	 * fonction permettant de récupérer les coordonées du coin haut gauche de la région dont la taille est size et donc la région contient le point de coordonées ligne, col
 	 */
@@ -193,7 +237,6 @@ public class Model {
 		}
 	}
 
-	
 	/*
 	 * Fonction permettant de savoir si un point de coordonnées ligne, col et locked, c'est à dire si la région à laquelle il appartient est complète
 	 */
@@ -255,6 +298,39 @@ public class Model {
 		}
 
 	}
+	
+	public boolean hasMorePiece(int ligne, int col, int couleur, int size) {
+		int bleu = 0;
+		int rouge = 0;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (ligne + i < this.size && col + j < this.size) {
+					int color = this.plateau.couleurCase(ligne + i, col + j);
+					if (color == Plateau.rouge) {
+						rouge++;
+					} else if (color == Plateau.bleu) {
+						bleu++;
+					}
+				}
+			}
+		}
+
+		if (couleur == Plateau.rouge) {
+			if (bleu > rouge) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			if (rouge > bleu) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+	}
+
 
 	/*
 	 * Fonction permettant de savoir si une region est pleine 
@@ -366,7 +442,6 @@ public class Model {
 		return p;
 	}
 
-	
 	public int nbOpponentColorTemeraire(int ligne, int col, int couleur) {
 		int nb = 0;
 		for (int i = -1; i < 2; i++) {
@@ -381,7 +456,6 @@ public class Model {
 		return nb;
 	}
 
-	
 	/*
 	 * Fonction qui joue l'action du bot
 	 */
@@ -486,7 +560,7 @@ public class Model {
 		int size = this.redPoints.size();
 		for (int i = 0; i < size; i++) {
 			p = this.redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu
+			if (!hasFreeNeighborBrave(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu
 					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
 				this.redPoints.remove(i);
 				size--;
@@ -497,7 +571,7 @@ public class Model {
 		size = this.bluePoints.size();
 		for (int i = 0; i < size; i++) {
 			p = this.bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge
+			if (!hasFreeNeighborBrave(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge
 					|| !isNotLock(p.gety(), p.getx(), quadTree)) {
 				this.bluePoints.remove(i);
 				size--;
@@ -506,9 +580,8 @@ public class Model {
 		}
 	}
 
-	
 
-	// ******************** Fonctions générales ********************//
+	// **************************************** Fonctions générales ****************************************//
 
 	/*
 	 * Fonction seulement utilisé si on charge un fichier
@@ -536,57 +609,34 @@ public class Model {
 		}
 	}
 
-
-	public boolean hasMorePiece(int ligne, int col, int couleur, int size) {
-		int bleu = 0;
-		int rouge = 0;
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (ligne + i < this.size && col + j < this.size) {
-					int color = this.plateau.couleurCase(ligne + i, col + j);
-					if (color == Plateau.rouge) {
-						rouge++;
-					} else if (color == Plateau.bleu) {
-						bleu++;
-					}
-				}
-			}
-		}
-
+	public int getOppositeColor(int couleur) {
 		if (couleur == Plateau.rouge) {
-			if (bleu > rouge) {
-				return false;
-			} else {
-				return true;
-			}
+			return Plateau.bleu;
 		} else {
-			if (rouge > bleu) {
-				return false;
-			} else {
-				return true;
-			}
+			return Plateau.rouge;
 		}
-
 	}
-
+	
+	/*
+	 * Fonction seulement utilisé si on charge un fichier
+	 */
 	public void coloration(int ligne, int col, int couleur) {
-		if (couleur == 1 && plateau.couleurCase(ligne, col) == 2) {
+		if (couleur == 1 && this.plateau.couleurCase(ligne, col) == 2) {
 			this.redScore--;
 			this.blueScore++;
-		} else if (couleur == 2 && plateau.couleurCase(ligne, col) == 1) {
+		} else if (couleur == 2 && this.plateau.couleurCase(ligne, col) == 1) {
 			this.redScore++;
 			this.blueScore--;
-		} else if (couleur == 1 && plateau.couleurCase(ligne, col) == 0) {
+		} else if (couleur == 1 && this.plateau.couleurCase(ligne, col) == 0) {
 			this.blueScore++;
-		} else if (couleur == 2 && plateau.couleurCase(ligne, col) == 0) {
+		} else if (couleur == 2 && this.plateau.couleurCase(ligne, col) == 0) {
 			this.redScore++;
 		}
-		if (plateau.couleurCase(ligne, col) == 0) {
-			plateau.decrementerUncoloredNb();
+		if (this.plateau.couleurCase(ligne, col) == 0) {
+			this.plateau.decrementerUncoloredNb();
 		}
 
-		plateau.changerValeur(ligne, col, couleur);
-		// plateau.decrementerUncoloredNb();
+		this.plateau.changerValeur(ligne, col, couleur);
 
 		switchingColors(ligne, col, couleur);
 	}
@@ -606,19 +656,25 @@ public class Model {
 		}
 	}
 
+	
+	// **************************************** pour AFFICHAGE ****************************************//
+	
 	public void afficher() {
 		this.afficherScores();
 		this.plateau.afficherPlateau();
-	}
-
-	public void afficherQT() {
-		this.quadTree.printValuePoint();
 	}
 
 	public boolean estTerminee() {
 		return plateau.estEntierementColorie();
 	}
 
+	public void afficherScores() {
+		System.out.println("rouge : " + redScore + "; bleu : " + blueScore);
+	}
+
+
+	// **************************************** GETTER & SETTER ****************************************//
+	
 	public Plateau getPlateau() {
 		return this.plateau;
 	}
@@ -626,86 +682,15 @@ public class Model {
 	public int getSize() {
 		return this.size;
 	}
-
-	public void afficherScores() {
-		System.out.println("rouge : " + redScore + "; bleu : " + blueScore);
-	}
-
-	public void actualizingArrayPoints() {
-		Point p;
-		int size = this.redPoints.size();
-		for (int i = 0; i < size; i++) {
-			p = this.redPoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.bleu) {
-				this.redPoints.remove(i);
-				size--;
-				i--;
-			}
-		}
-
-		size = this.bluePoints.size();
-		for (int i = 0; i < size; i++) {
-			p = this.bluePoints.get(i);
-			if (!hasFreeNeighbor(p.gety(), p.getx()) || plateau.couleurCase(p.gety(), p.getx()) == Plateau.rouge) {
-				this.bluePoints.remove(i);
-				size--;
-				i--;
-			}
-		}
-	}
-
-
-	public boolean hasFreeNeighbor(int ligne, int col) {
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
-				if (plateau.couleurCase(ligne + i, col + j) == 0) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public int nbOpponentColorBrave(int ligne, int col, int couleur) {
-		int nb = 0;
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
-				if ((plateau.couleurCase(ligne + i, col + j) != -1)
-						&& (plateau.couleurCase(ligne + i, col + j) != couleur)
-						&& (plateau.couleurCase(ligne + i, col + j) != 0)) {
-					nb++;
-				}
-			}
-		}
-		return nb;
-	}
-
-
 	public QuadTree getQuadTree() {
 		return this.quadTree;
-	}
-
-	public int getOppositeColor(int couleur) {
-		if (couleur == Plateau.rouge) {
-			return Plateau.bleu;
-		} else {
-			return Plateau.rouge;
-		}
 	}
 
 	public boolean isGloutonne() {
 		return isGloutonne;
 	}
 
-	public void setGloutonne(boolean isGloutonne) {
-		this.isGloutonne = isGloutonne;
-	}
-
 	public boolean isBrave() {
 		return isBrave;
-	}
-
-	public void setBrave(boolean isBrave) {
-		this.isBrave = isBrave;
 	}
 }
