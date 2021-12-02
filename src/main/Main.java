@@ -7,6 +7,6 @@ public class Main
 {
 	public static void main(String[] args) {
 		Game g = new Game();
-		g.play(false); // on lance le jeu avec cette commmande
+		g.play(); // on lance le jeu avec cette commmande
 	}
 }

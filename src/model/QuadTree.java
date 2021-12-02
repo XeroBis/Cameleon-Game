@@ -160,4 +160,25 @@ public class QuadTree {
 			qt3.printValuePoint();
 		}
 	}
+	
+	public int getValue(int ligne, int col) {
+		if(this.isSterile) {
+			return this.value;
+		} else {
+			if (col >= this.getQt(2).getPoint().getx()) {
+				if (ligne >= this.getQt(2).getPoint().gety()) {
+					this.getQt(2).getValue(ligne, col);
+				} else {
+					this.getQt(1).getValue(ligne, col);
+				}
+			} else {
+				if (ligne >= this.getQt(2).getPoint().gety()) {
+					this.getQt(3).getValue(ligne, col);
+				} else {
+					this.getQt(0).getValue(ligne, col);
+				}
+			}
+		}
+		return 0;
+	}	
 }

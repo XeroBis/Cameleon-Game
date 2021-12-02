@@ -296,7 +296,6 @@ public class Model {
 
 			}
 		}
-
 	}
 	
 	public boolean hasMorePiece(int ligne, int col, int couleur, int size) {
@@ -355,9 +354,6 @@ public class Model {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (ligne + i < this.size && col + j < this.size) {
-					int posl = ligne + i;
-					int posc = col + j;
-					System.out.println("test, size : " + size + ",  quelle coorrd recoloriée : x = "+ posl + ", y = " + posc);
 					plateau.changerValeur(ligne + i, col + j, couleur);
 				}
 			}
@@ -462,6 +458,8 @@ public class Model {
 	public void botTemeraireGlouton(int color) {
 		Point bestMove = getBestMoveTemeraire(color);
 		this.colorationTemeraire(bestMove.gety(), bestMove.getx(), color);
+		System.out.println("bestMove :  x = "+ bestMove.getx() + ", y = "+ bestMove.gety());
+		System.out.println("taille array : bleu : "+ this.bluePoints.size() + ", rouge : " + this.redPoints.size());
 		this.updateScoreTemeraire();
 		this.actualizingArrayPointsTemeraire();
 	}

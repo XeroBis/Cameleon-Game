@@ -26,13 +26,9 @@ public class Game {
 	/*
 	 * fonction lançant une partie du jeu.
 	 */
-	public void play(boolean test) {
+	public void play() {
 		this.loadFiles();
-		if (test) {
-			this.fastParamBrave();
-		} else {
-			this.parametreOfGame();
-		}
+		this.parametreOfGame();
 		if (this.variant == JvIA) {
 			this.playIAvJ();
 		} else if (this.variant == JvJ) {
@@ -40,13 +36,6 @@ public class Game {
 		} else if (this.variant == IAvIA) {
 			this.playIAvIA();
 		}
-	}
-
-	
-	private void fastParamBrave() {
-		this.isBrave = false;
-		this.isGloutonne = true;
-		this.variant = IAvIA; // IA
 	}
 
 	/*
@@ -232,7 +221,6 @@ public class Game {
 				} else {
 					System.out.println("Tour de l'IA 2 : ");
 					this.model.botTemeraireGlouton(rouge);
-					
 					if (this.model.estTerminee()) {
 						playing = false;
 					} else {
@@ -247,6 +235,7 @@ public class Game {
 
 	/*
 	 * @purpose Fonction permettant au joueur de jouer un tour
+	 * @return boolean si le Move est possible 
 	 */
 	private boolean playMove(int i, int j, int couleur) {
 		if (this.isBrave) {
@@ -326,18 +315,27 @@ public class Game {
 			}
 		}
 
-		if (preload) { // donc on load un fichier
+		boolean file = preload;
+		while (preload) { // donc on load un fichier
 
 			System.out.print("entrez un nom de fichier : ");
 			String name = scan.next();
 			try {
 				readTextFile(name);
+				preload = false;
+				
 			} catch (IOException e) {
 				System.out.println("Fichier n'existe pas");
-				e.printStackTrace();
+				System.out.println("Voulez-vous rentrez un autre nom de fichier? (1 pour oui, 0 pour non)");
+				int cast = 0;
+				cast = scan.nextInt();
+				if(cast == 0) {
+					preload = false;
+					file = false;
+				}
 			}
 
-		} else { // on load rien
+		} if (!file) { // on load rien
 			System.out.print("entrez la taille du plateau k (dans la formule 3 * 2 ^ k) : ");
 			String k = scan.next();
 
