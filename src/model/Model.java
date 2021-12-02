@@ -58,7 +58,7 @@ public class Model {
 
 			return new QuadTree(null, false, QuadTree.blanc, p, buildingQT(father, k - 1, p, size / 2),
 					buildingQT(father, k - 1, p1, size / 2), buildingQT(father, k - 1, p2, size / 2),
-					buildingQT(father, k - 1, p3, size), size);
+					buildingQT(father, k - 1, p3, size/2), size);
 		}
 	}
 
