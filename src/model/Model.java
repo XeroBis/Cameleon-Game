@@ -89,8 +89,7 @@ public class Model {
 		}
 	}
 
-	public void botBraveGlouton(int color) {
-		actualizingArrayPointsBrave();
+	public Point getBestMoveBrave(int color) {
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
@@ -125,6 +124,12 @@ public class Model {
 		} else {
 			p = mvp.get((int) (Math.random() * mvp.size()));
 		}
+		return p;
+	}
+	
+	public void botBraveGlouton(int color) {
+		actualizingArrayPointsBrave();
+		Point p = getBestMoveBrave(color);
 		colorationBrave(p.gety(), p.getx(), color);
 		actualizingArrayPointsBrave();
 	}
@@ -330,7 +335,6 @@ public class Model {
 		}
 
 	}
-
 
 	/*
 	 * Fonction permettant de savoir si une region est pleine 
@@ -551,7 +555,6 @@ public class Model {
 		}
 		return caseColorie;
 	}
-	
 	
 	public void actualizingArrayPointsTemeraire() {
 		Point p;

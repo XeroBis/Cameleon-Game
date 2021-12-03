@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import model.Model;
+import model.Point;
 
 public class Game {
 	private boolean isBrave;
@@ -115,18 +116,22 @@ public class Game {
 	public void playJvJ() {
 		boolean playing = true;
 		Scanner scan = new Scanner(System.in);
+		int[] move;
 		while (playing) {
 			this.to_string();
 
 			System.out.println("JOUEUR 1 : ");
+
+			move = this.getBestMove(rouge);
+			System.out.println("Le meilleur cout est en : colonne = " + move[0] + ", ligne =" + move[1]);
 			int[] coord = chooseCoordinate();
 			boolean play;
-			play = this.playMove(coord[1], coord[0], bleu);
+			play = this.playMove(coord[1], coord[0], rouge);
 			while (!play) {
 				System.out.println(
 						"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 				coord = chooseCoordinate();
-				play = this.playMove(coord[1], coord[0], bleu);
+				play = this.playMove(coord[1], coord[0], rouge);
 			}
 			if (this.model.estTerminee()) {
 				playing = false;
@@ -134,13 +139,16 @@ public class Game {
 			} else {
 				this.to_string();
 				System.out.println("JOUEUR 2 : ");
+
+				move = this.getBestMove(rouge);
+				System.out.println("Le meilleur cout est en : colonne = " + move[0] + ", ligne =" + move[1]);
 				coord = chooseCoordinate();
-				play = this.playMove(coord[1], coord[0], rouge);
+				play = this.playMove(coord[1], coord[0], bleu);
 				while (!play) {
 					System.out.println(
 							"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 					coord = chooseCoordinate();
-					play = this.playMove(coord[1], coord[0], rouge);
+					play = this.playMove(coord[1], coord[0], bleu);
 				}
 				System.out.println("uncolored nb: " + this.model.getPlateau().getUncolored_nb());
 			}
@@ -164,13 +172,15 @@ public class Game {
 		while (playing) {
 
 			System.out.println("Tour du Joueur : ");
+			int[] move = this.getBestMove(rouge);
+			System.out.println("Le meilleur cout est en : colonne = " + move[0] + ", ligne =" + move[1]);
 			int[] coord = chooseCoordinate();
-			boolean play = this.playMove(coord[1], coord[0], bleu);
+			boolean play = this.playMove(coord[1], coord[0], rouge);
 			while (!play) {
 				System.out.println(
 						"La case que vous avez selectionnée est déjà colorié, veuillez choisir une autre case.");
 				coord = chooseCoordinate();
-				play = this.playMove(coord[1], coord[0], bleu);
+				play = this.playMove(coord[1], coord[0], rouge);
 			}
 			if (this.model.estTerminee()) {
 				playing = false;
@@ -178,9 +188,9 @@ public class Game {
 				this.to_string();
 				System.out.println("Tour de l'IA : ");
 				if (this.isBrave) {
-					this.model.botBraveGlouton(rouge);
+					this.model.botBraveGlouton(bleu);
 				} else if (!this.isBrave && this.isGloutonne) {
-					this.model.botTemeraireGlouton(rouge);
+					this.model.botTemeraireGlouton(bleu);
 				}
 				this.to_string();
 				if (this.model.estTerminee()) {
@@ -200,13 +210,13 @@ public class Game {
 		while (playing) {
 			if (this.isBrave) {
 				System.out.println("Tour de l'IA 1 : ");
-				this.model.botBraveGlouton(bleu);
+				this.model.botBraveGlouton(rouge);
 				this.to_string();
 				if (this.model.estTerminee()) {
 					playing = false;
 				} else {
 					System.out.println("Tour de l'IA 2 : ");
-					this.model.botBraveGlouton(rouge);
+					this.model.botBraveGlouton(bleu);
 					this.to_string();
 					if (this.model.estTerminee()) {
 						playing = false;
@@ -214,7 +224,7 @@ public class Game {
 				}
 			} else if (!this.isBrave && this.isGloutonne) {
 				System.out.println("Tour de l'IA 1 : ");
-				this.model.botTemeraireGlouton(bleu);
+				this.model.botTemeraireGlouton(rouge);
 				this.to_string();
 				if (this.model.estTerminee()) {
 					playing = false;
@@ -244,6 +254,23 @@ public class Game {
 			return this.model.colorationTemeraire(i, j, couleur);
 		}
 	}
+	
+	private int[] getBestMove(int color) {
+		int[] res = new int[2];
+		Point p;
+		if(this.isBrave) {
+			p = this.model.getBestMoveBrave(color);
+			res[0] = p.getx();
+			res[1] = p.gety();
+		} else {
+			p = this.model.getBestMoveTemeraire(color);
+			res[0] = p.getx();
+			res[1] = p.gety();
+		}
+		return res;
+	}
+	
+	
 
 	/*
 	 * @purpose fonction permettant le choix, par l'utilisateur des coordonnées de son
