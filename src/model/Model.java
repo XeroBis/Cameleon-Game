@@ -13,6 +13,7 @@ public class Model {
 	private int redScore, blueScore; // les deux ints des scores.
 	private boolean isGloutonne;
 	private boolean isBrave;
+	
 
 	/*
 	 * constructeur de Model
@@ -66,7 +67,7 @@ public class Model {
 
 	public boolean colorationBrave(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0 || ligne < 0 || ligne >= size || col < 0 || col >= size) {
-			System.out.println("Mouvement Interdit !");
+			//System.out.println("Mouvement Interdit !");
 			return false;
 		} else {
 			coloration(ligne, col, couleur);
@@ -180,7 +181,7 @@ public class Model {
 
 	public boolean colorationTemeraire(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != this.plateau.blanc) {
-			System.out.println("Mouvement Interdit !");
+			//System.out.println("Mouvement Interdit !");
 			return false;
 		} else {
 			coloration(ligne, col, couleur); // R1
@@ -456,10 +457,9 @@ public class Model {
 	 * Fonction qui joue l'action du bot
 	 */
 	public void botTemeraireGlouton(int color) {
+		this.actualizingArrayPointsTemeraire();
 		Point bestMove = getBestMoveTemeraire(color);
 		this.colorationTemeraire(bestMove.gety(), bestMove.getx(), color);
-		System.out.println("bestMove :  x = "+ bestMove.getx() + ", y = "+ bestMove.gety());
-		System.out.println("taille array : bleu : "+ this.bluePoints.size() + ", rouge : " + this.redPoints.size());
 		this.updateScoreTemeraire();
 		this.actualizingArrayPointsTemeraire();
 	}

@@ -352,7 +352,7 @@ public class Game {
 	public void readTextFile(String filename) throws IOException {
 		String dir = System.getProperty("user.dir");
 
-		File file = new File(dir + "\\" + filename);
+		File file = new File(dir + "/" + filename);
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 
 		String str;
