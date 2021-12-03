@@ -127,7 +127,7 @@ public class Model {
 		return p;
 	}
 	
-	public void botBraveGlouton(int color) {
+	public void JouerGloutonBrave(int color) {
 		actualizingArrayPointsBrave();
 		Point p = getBestMoveBrave(color);
 		colorationBrave(p.gety(), p.getx(), color);
@@ -214,7 +214,7 @@ public class Model {
 				}
 
 			}
-			this.updateScoreTemeraire();
+			this.CalculeScore();
 
 		}
 		return true;
@@ -460,15 +460,15 @@ public class Model {
 	/*
 	 * Fonction qui joue l'action du bot
 	 */
-	public void botTemeraireGlouton(int color) {
+	public void JouerGloutonTemeraire(int color) {
 		this.actualizingArrayPointsTemeraire();
 		Point bestMove = getBestMoveTemeraire(color);
 		this.colorationTemeraire(bestMove.gety(), bestMove.getx(), color);
-		this.updateScoreTemeraire();
+		this.CalculeScore();
 		this.actualizingArrayPointsTemeraire();
 	}
 
-	public void updateScoreTemeraire() {
+	public void CalculeScore() {
 		int scoreBleu = 0;
 		int scoreRouge = 0;
 

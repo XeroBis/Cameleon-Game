@@ -15,10 +15,7 @@ public class Game {
 	public static int JvJ = 0, JvIA = 1, IAvIA = 2;
 	private int variant;
 	public static int blanc = 0, bleu = 1, rouge = 2; // si en jvj, bleu = joueur 1 et rouge = joueur 2
-	
-	
-	
-	
+
 	private Model model;
 
 	public Game() {
@@ -188,9 +185,9 @@ public class Game {
 				this.to_string();
 				System.out.println("Tour de l'IA : ");
 				if (this.isBrave) {
-					this.model.botBraveGlouton(bleu);
+					this.model.JouerGloutonBrave(bleu);
 				} else if (!this.isBrave && this.isGloutonne) {
-					this.model.botTemeraireGlouton(bleu);
+					this.model.JouerGloutonTemeraire(bleu);
 				}
 				this.to_string();
 				if (this.model.estTerminee()) {
@@ -210,13 +207,13 @@ public class Game {
 		while (playing) {
 			if (this.isBrave) {
 				System.out.println("Tour de l'IA 1 : ");
-				this.model.botBraveGlouton(rouge);
+				this.model.JouerGloutonBrave(rouge);
 				this.to_string();
 				if (this.model.estTerminee()) {
 					playing = false;
 				} else {
 					System.out.println("Tour de l'IA 2 : ");
-					this.model.botBraveGlouton(bleu);
+					this.model.JouerGloutonBrave(bleu);
 					this.to_string();
 					if (this.model.estTerminee()) {
 						playing = false;
@@ -224,13 +221,13 @@ public class Game {
 				}
 			} else if (!this.isBrave && this.isGloutonne) {
 				System.out.println("Tour de l'IA 1 : ");
-				this.model.botTemeraireGlouton(rouge);
+				this.model.JouerGloutonTemeraire(rouge);
 				this.to_string();
 				if (this.model.estTerminee()) {
 					playing = false;
 				} else {
 					System.out.println("Tour de l'IA 2 : ");
-					this.model.botTemeraireGlouton(rouge);
+					this.model.JouerGloutonTemeraire(rouge);
 					if (this.model.estTerminee()) {
 						playing = false;
 					} else {
@@ -270,8 +267,6 @@ public class Game {
 		return res;
 	}
 	
-	
-
 	/*
 	 * @purpose fonction permettant le choix, par l'utilisateur des coordonnées de son
 	 * prochain coup
