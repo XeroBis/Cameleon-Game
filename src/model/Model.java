@@ -723,7 +723,9 @@ public class Model {
 	}
 
 	/*
-	 * @purpose modifie completement le QuadTree
+	 * @purpose modifie completement le QuadTree selon les modifications faite sur le plateau
+	 * @param quadTree, pour la récursivité
+	 * @complexity O(n)
 	 */
 	public void RemplirQuadTree(QuadTree quadTree) {
 		Point p = quadTree.getPoint();
@@ -740,7 +742,13 @@ public class Model {
 			}
 		}
 	}
-
+	
+	/*
+	 * @purpose retourne la couleur opposée
+	 * @param couleur
+	 * @return int, la couleur oppossée
+	 * @complexity O(n), n étant le nombre de case ennemi pouvant être capturer
+	 */
 	public int getOppositeColor(int couleur) {
 		if (couleur == Plateau.rouge) {
 			return Plateau.bleu;
@@ -750,7 +758,9 @@ public class Model {
 	}
 	
 	/*
-	 * Fonction seulement utilisé si on charge un fichier
+	 * @purpose colorie le plateau
+	 * @param ligne, col
+	 * @complexity O(1)
 	 */
 	public void coloration(int ligne, int col, int couleur) {
 		if (couleur == 1 && this.plateau.couleurCase(ligne, col) == 2) {
@@ -773,6 +783,13 @@ public class Model {
 		switchingColors(ligne, col, couleur);
 	}
 
+	
+	/*
+	 * @purpose ajoute le point jouée dans le tableau de points de la couleur correspondante
+	 * @param ligne, col
+	 * @param couleur la couleur de la case
+	 * @complexity O(1)
+	 */
 	public void switchingColors(int ligne, int col, int couleur) {
 		switch (couleur) {
 		case 1:
