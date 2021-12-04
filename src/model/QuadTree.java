@@ -10,7 +10,8 @@ public class QuadTree {
 	public static int blanc = 0, bleu = 1, rouge = 2;
 
 	/*
-	 * Constructeur de QuadTree
+	 * @purpose construit le QuadTree
+	 * @complexity O(1)
 	 */
 	public QuadTree() {
 		this.size = 3;
@@ -43,23 +44,30 @@ public class QuadTree {
 		this.qt2 = qt2;
 		this.qt3 = qt3;
 	}
-
-
-	public void setSize(int size) {
-		this.size = size;
-	}
+	
+	/*
+	 * @purpose renvoie la taille du coté du quadTree courant
+	 * @complexity O(1)
+	 */
 	public int getSize() {
 		return this.size;
 	}
 	
+	/*
+	 * @purpose change la valeur de l'attribut isSterile du QuadTree (Quand une régione est capturée par exemple)
+	 * @complexity O(1)
+	 */
 	public void setIsSterile(boolean isSterile) {
 		this.isSterile = isSterile;
 	}
+	
+	/*
+	 * @purpose renvoie la valeur de l'attribut isSteriel du QuadTree
+	 * @complexity O(1)
+	 */
 	public boolean getIsSterile() {
 		return this.isSterile;
 	}
-	
-	
 	
 	public void setValue(Integer newValue) {
 		this.value = newValue;

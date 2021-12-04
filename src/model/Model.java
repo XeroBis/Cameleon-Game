@@ -16,7 +16,7 @@ public class Model {
 	
 
 	/*
-	 * constructeur de Model
+	 * @purpose, construit le model
 	 */
 	public Model() {
 		this.redPoints = new ArrayList<Point>();
@@ -27,26 +27,38 @@ public class Model {
 		this.isGloutonne = true;
 		this.isBrave = true;
 	}
-
+	/*
+	 * @purpose, construit le model
+	 * @param k, le k de 3 * 2^k
+	 */
 	public Model(int k) {
 		this.setNewK(k);
-
 		this.redPoints = new ArrayList<Point>();
 		this.bluePoints = new ArrayList<Point>();
-
 		this.redScore = 0;
 		this.blueScore = 0;
 		this.isGloutonne = true;
 		this.isBrave = true;
 	}
 
+	/*
+	 * @purpose, construit les attributs de Model, càd le quadTree et le plateau selon le k
+	 * @param k, le k de 3 * 2^k
+	 * @complexity 
+	 */
 	public void setNewK(int k) {
 		this.plateau = new Plateau(k);
 		this.size = 3 * (int) Math.pow(2, k);
 		this.quadTree = buildingQT(null, k, new Point(0, 0), 3 * (int) Math.pow(2, k));
 
 	}
-
+	/*
+	 * @purpose Construit tout les files d'un quadTree selon k et P le point haut gauche de ce même quadTree
+	 * @param father, le quadTree père
+	 * @param k, le k de l'équation size = 3 * 2^k
+	 * @param size
+	 * @complexity O(4^k)
+	 */
 	private QuadTree buildingQT(QuadTree father, int k, Point p, int size) {
 		if (k == 0) {
 			return new QuadTree(father, true, QuadTree.blanc, p, null, null, null, null, size);
@@ -64,10 +76,16 @@ public class Model {
 	}
 
 	// **************************************** Fonctions pour le mode de jeu "Brave" ****************************************//
-
+	
+	
+	/*
+	 * @purpose change la couleur du tableau d'une case selon les règles BRAVE du jeu du caméléon
+	 * @param ligne, col les coordonées du point à récolorier
+	 * @param couleur, la couleur du point à colorier
+	 * @complexity O(1)
+	 */
 	public boolean colorationBrave(int ligne, int col, int couleur) {
 		if (plateau.couleurCase(ligne, col) != 0 || ligne < 0 || ligne >= size || col < 0 || col >= size) {
-			//System.out.println("Mouvement Interdit !");
 			return false;
 		} else {
 			coloration(ligne, col, couleur);
@@ -76,7 +94,10 @@ public class Model {
 			return true;
 		}
 	}
-
+	/*
+	 * @purpose change la couleur des voisins de la case située en ligne, col suivant les règles
+	 * @complexity O(1)
+	 */
 	public void recolorationBrave(int ligne, int col, int couleur) {
 		for (int i = ligne - 1; i < ligne + 2; i++) {
 			if (i >= 0 && i < this.size) {
@@ -351,11 +372,19 @@ public class Model {
 	}
 
 	/*
-	 * fonction qui sert à recolorier le plateau de la coordonnée ligne, col sur un
-	 * carré de size x size
+	 * @purpose recolorie le plateau de la coordonnée ligne, col sur un carré de size x size
+	 * @param ligne, col les coordonées du point haut gauche de la région, 
+	 * @param size la taille de la région que l'on doit recolorier
+	 * @param couleur, la couleur utilisé pour le recoloriage
+	 * @complexity O(n^2), n étant size
 	 */
 	public void recoloringRegionPlateau(int ligne, int col, int couleur, int size) {
-
+		
+		if(this.quadTree.getValue(ligne, col) != couleur) {
+			
+		}
+		
+		
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (ligne + i < this.size && col + j < this.size) {
@@ -665,10 +694,6 @@ public class Model {
 		this.plateau.afficherPlateau();
 	}
 
-	public boolean estTerminee() {
-		return plateau.estEntierementColorie();
-	}
-
 	public void afficherScores() {
 		System.out.println("rouge : " + redScore + "; bleu : " + blueScore);
 	}
@@ -676,16 +701,8 @@ public class Model {
 
 	// **************************************** GETTER & SETTER ****************************************//
 	
-	public Plateau getPlateau() {
-		return this.plateau;
-	}
-
 	public int getSize() {
 		return this.size;
-	}
-	
-	public QuadTree getQuadTree() {
-		return this.quadTree;
 	}
 
 	public boolean isGloutonne() {

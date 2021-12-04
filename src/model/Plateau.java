@@ -13,9 +13,9 @@ public class Plateau {
 	
 	
 	/*
-	 * Constructeur de Plateau
-	 * 
+	 * @purpose Constructeur de Plateau
 	 * @param k, le k qui permet de savoir la taille du plateau
+	 * @complexity O(n^2), avec n = 3 * 2^k  
 	 */
 	public Plateau(int k) {
 		int dim = (int) (3 * Math.pow(2, k));
@@ -31,6 +31,10 @@ public class Plateau {
 		this.uncolored_nb = dim * dim;
 	}
 
+	/*
+	 * @purpose fonction permettant d'afficher le plateau dans le terminal
+	 * @complexity O(n^2), n étant la longueur du coté
+	 */
 	public void afficherPlateau() {	
 		
 		for (int i = 0; i < tableau.size(); i++) {
@@ -59,10 +63,21 @@ public class Plateau {
 		}
 	}
 
+	/*
+	 * @purpose change la valeur d'une case dans le plateau en la valeur donnée par le paramètre color.
+	 * @param ligne, col, les coordonées de la case qu'il faut modifier, color, la couleur qu'il faut mettre à cet emplacement.
+	 * @complexity O(1)
+	 */
 	public void changerValeur(int ligne, int col, int color) {
 		this.tableau.get(ligne).set(col, color);
 	}
 
+	/*
+	 * @purpose retourne la couleur d'une case se situant
+	 * @param ligne, col : les coordonées du point d'ou l'oon veut la couleur
+	 * @return int, la couleur de la case
+	 * @complexity O(1)
+	 */
 	public int couleurCase(int ligne, int col) {
 		if ((ligne < 0) || (ligne  >= tableau.size()) || (col < 0) || (col >= tableau.size())) {
 			return -1;
