@@ -460,6 +460,8 @@ public class Model {
 	/*
 	 * @purpose permet de récupérer le meilleur move en terme de différence de point avec l'adversaire
 	 * @param color, la couleur que l'on veut tester
+	 * @return Point, le meilleur point actuel (qui fait gagner le plus de point)
+	 * @complexity O(n^?)
 	 */
 	public Point EvalCaseTemeraire(int color) {
 		this.actualizingArrayPointsTemeraire();
@@ -536,6 +538,12 @@ public class Model {
 		return p;
 	}
 
+	/*
+	 * @purpose détermine le nombre d'ennemie capturable autour d'une case
+	 * @param ligne, col les coord de la case que l'on teste
+	 * @param couleur, la couleur actuelle
+	 * @complexity O(1)
+	 */
 	public int nbOpponentColorTemeraire(int ligne, int col, int couleur) {
 		int nb = 0;
 		for (int i = -1; i < 2; i++) {
@@ -551,7 +559,9 @@ public class Model {
 	}
 
 	/*
-	 * Fonction qui joue l'action du bot
+	 * @purpose Joue le coup du bot du glouton en suivant les règles du mode de jeu TEMERAIRE
+	 * @param color, la couleur courante
+	 * @complexity O(n)
 	 */
 	public void JouerGloutonTemeraire(int color) {
 		this.actualizingArrayPointsTemeraire();
@@ -561,6 +571,11 @@ public class Model {
 		this.actualizingArrayPointsTemeraire();
 	}
 
+	/*
+	 * @purpose calcul le score actuel de la partie
+	 * @param ligne, col
+	 * @complexity O(n^2), n étant la taille du coté du plateau
+	 */
 	public void CalculeScore() {
 		int scoreBleu = 0;
 		int scoreRouge = 0;
@@ -579,8 +594,11 @@ public class Model {
 	}
 
 	/*
-	 * Fonction testant si la zone qui contient le point en ligne col contient 8
-	 * case coloriée et peut donc être capturé
+	 * @purpose détermine le nombre de zone capturé en prenant un point 
+	 * @param ligne, col les coordonnées du point
+	 * @param color, la couleur courante
+	 * @return int, le nombre de zone capturées
+	 * @complexity O(n) ?
 	 */
 	public int getNumberOfZoneTaken(int ligne, int col, int color) {
 		// en premier on test si les coord données remplisse une partie
@@ -613,6 +631,13 @@ public class Model {
 		}
 	}
 
+	
+	/*
+	 * @purpose détermine si la région père de la zone dans laquel le point se trouve est capturé si cette même région est capturée
+	 * @param son, le quadTree courant
+	 * @return int, le nombre de petite zone capturé 
+	 * @complexity O(n), n étant la dimension maximum du QuadTree de notre partie
+	 */
 	public int TestIfGetBiggerZone(QuadTree son) {
 		if (son.getFather() == null) {
 			return 1;
@@ -637,6 +662,12 @@ public class Model {
 
 	}
 
+	/*
+	 * @purpose retourne le nombre de case coloriée autour d'une case
+	 * @param ligne, col, les coordonnées de la case 
+	 * @return int, le nombre de case coloriée
+	 * @complexity O(1)
+	 */
 	public int getNumberOfCaseColoried(int ligne, int col) {
 		int caseColorie = 0;
 		for (int i = 0; i < 3; i++) {
@@ -649,6 +680,10 @@ public class Model {
 		return caseColorie;
 	}
 	
+	/*
+	 * @purpose actualise les tableaux bleuPoints et redSize
+	 * @complexity O(n), n étant la somme de la taille de bluePoints ainsi que de la taille de RedPoints
+	 */
 	public void actualizingArrayPointsTemeraire() {
 		Point p;
 		int size = this.redPoints.size();
