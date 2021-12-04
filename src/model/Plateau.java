@@ -53,9 +53,9 @@ public class Plateau {
 				System.out.print(",");
 			}
 			if(ligne.get(ligne.size()-1) == bleu) {
-				System.out.print("B");
+				System.out.print(ANSI_BLUE + "B" + ANSI_RESET);
 			} else if(ligne.get(ligne.size()-1) == rouge) {
-				System.out.print("R");
+				System.out.print(ANSI_RED + "R" + ANSI_RESET);
 			} else if(ligne.get(ligne.size()-1) == blanc) {
 				System.out.print("A");
 			}

@@ -64,22 +64,7 @@ public class Game {
 		System.out.println("Voulez-vous jouer avec un joueur? 0 , contre une IA? 1, ou laisser deux IA jouer? 2");
 		ia = scan.nextInt();
 		if (ia != 0) {
-			//this.variant = this.JvIA;
-			System.out.println(
-					"L'IA peut jouer de deux façon différentes, Gloutonne ou Inteligente, que choisissez vous? (0/1)");
-			int versionIA = -1;
-			while (versionIA != 0 && versionIA != 1) {
-				System.out.print(
-						"Veuillez entrez la valeur 0 pour la version Gloutonne et 1 pour la version Intelligente.");
-				versionIA = scan.nextInt();
-			}
-			if (versionIA == 0) {
-				System.out.println("Vous avez donc choisi la version Gloutonne !");
-				this.setGloutonne(true);
-			} else {
-				System.out.println("Vous avez donc choisi la version Intelligente !");
-				this.setGloutonne(false);
-			}
+			this.setGloutonne(true);
 		} else {
 			System.out.println("Vous avez donc choisi de jouer en Joueur versus Joueur.");
 		}
