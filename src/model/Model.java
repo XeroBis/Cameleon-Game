@@ -216,7 +216,7 @@ public class Model {
 
 	/*
 	 * @purpose détermine si la case à une case voisine qui est blanche
-	 * @param couleur, la couleur que l'on veut jouer
+	 * @param ligne, col
 	 * @complexity O(n), n étant le nombre de case ennemi pouvant être capturer
 	 */
 	public boolean hasFreeNeighborBrave(int ligne, int col) {
@@ -741,5 +741,11 @@ public class Model {
 	}
 	public boolean estTerminee() {
 		return this.plateau.estEntierementColorie();
+	}
+	public Plateau getPlateau() {
+		return this.plateau;
+	}
+	public QuadTree getQuadTree() {
+		return this.quadTree;
 	}
 }
