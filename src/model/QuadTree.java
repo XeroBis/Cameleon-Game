@@ -26,12 +26,11 @@ public class QuadTree {
 
 	/*
 	 * Constructeur de QuadTree
-	 * 
 	 * @param value, la couleur du QuadTree
-	 * 
 	 * @param point, le point en haut à gauche de la zone
-	 * 
-	 * @param qt0, qt1, qt2 et qt3, les 4 sous-zones.
+	 * @param qt0, qt1, qt2 et qt3, les 4 sous-zones. 
+	 * qt0 la zone haut gauche, qt1 la zone haut droite, qt2 la zone basse droite et qt3 la zone basse gauche
+	 * @commplexity  O(1)
 	 */
 	public QuadTree(QuadTree father, boolean isSterile,Integer value, Point point, QuadTree qt0, QuadTree qt1, QuadTree qt2, QuadTree qt3, int size) {
 		this.size = size;
@@ -43,34 +42,8 @@ public class QuadTree {
 		this.qt1 = qt1;
 		this.qt2 = qt2;
 		this.qt3 = qt3;
-		
 	}
-	
-	
-	
 
-	public void setQt(int index, QuadTree newQuad) {
-		switch (index) {
-		case 0:
-			this.qt0 = newQuad;
-			break;
-
-		case 1:
-			this.qt1 = newQuad;
-			break;
-
-		case 2:
-			this.qt2 = newQuad;
-			break;
-
-		case 3:
-			this.qt3 = newQuad;
-			break;
-
-		default:
-			System.out.println("Pas le bon choix d'index, doit etre compris entre 0 et 3 (inclus)");
-		}
-	}
 
 	public void setSize(int size) {
 		this.size = size;
@@ -136,6 +109,7 @@ public class QuadTree {
 	public Point getPoint() {
 		return this.point;
 	}
+	
 	public boolean getisSterile() {
 		return this.isSterile;
 	}

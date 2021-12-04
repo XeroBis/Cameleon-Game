@@ -199,12 +199,12 @@ public class Model {
 
 			while (isRegionFull) {
 				if (size == this.size) {
-					this.acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree, size);
+					this.RemplirRegion(p.gety(), p.getx(), couleur, this.quadTree, size);
 					isRegionFull = false;
 				} else {
 					
 					// appel une fonction pour réécrir le plateau et l'arbre
-					this.acquiringRegion(p.gety(), p.getx(), couleur, this.quadTree, size);
+					this.RemplirRegion(p.gety(), p.getx(), couleur, this.quadTree, size);
 					
 					// p = point  angle haut gauche de la plus grande régions
 					size = size * 2;
@@ -271,7 +271,7 @@ public class Model {
 	/*
 	 * Fonction permettant la capture des zones et donc du changement de valeur dans le tableau de cases.
 	 */
-	public void acquiringRegion(int ligne, int col, int couleur, QuadTree quadTree, int size) {
+	public void RemplirRegion(int ligne, int col, int couleur, QuadTree quadTree, int size) {
 		if (quadTree != null) {
 			if (quadTree.getisSterile()) {
 				if (this.isRegionFull(ligne, col, size)) {
@@ -288,15 +288,15 @@ public class Model {
 			} else {
 				if (col >= quadTree.getQt(2).getPoint().getx()) {
 					if (ligne >= this.quadTree.getQt(2).getPoint().gety()) {
-						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(2), size);
+						this.RemplirRegion(ligne, col, couleur, quadTree.getQt(2), size);
 					} else {
-						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(1), size);
+						this.RemplirRegion(ligne, col, couleur, quadTree.getQt(1), size);
 					}
 				} else {
 					if (ligne >= quadTree.getQt(2).getPoint().gety()) {
-						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(3), size);
+						this.RemplirRegion(ligne, col, couleur, quadTree.getQt(3), size);
 					} else {
-						this.acquiringRegion(ligne, col, couleur, quadTree.getQt(0), size);
+						this.RemplirRegion(ligne, col, couleur, quadTree.getQt(0), size);
 					}
 				}
 

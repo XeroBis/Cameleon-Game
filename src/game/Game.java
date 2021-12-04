@@ -296,7 +296,6 @@ public class Game {
 	/*
 	 * @purpose change la valeur du boolean Brave
 	 * @param brave, boolean si la version du jeu est brave
-	 * @complexity O(1)
 	 */
 	private void setBrave(boolean brave) {
 		isBrave = brave;
