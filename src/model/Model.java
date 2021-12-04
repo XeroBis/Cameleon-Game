@@ -342,7 +342,7 @@ public class Model {
 	 * @param ligne, col les coordonées du point
 	 * @param quadTree, le quadTree courant
 	 * @param size, la taille du quadTree courant
-	 * @complexity O(n^2), n étant ??
+	 * @complexity O(n^2), n étant size
 	 */
 	public void RemplirRegion(int ligne, int col, int couleur, QuadTree quadTree, int size) {
 		if (quadTree != null) {
@@ -713,14 +713,17 @@ public class Model {
 	// **************************************** Fonctions générales ****************************************//
 
 	/*
-	 * Fonction seulement utilisé si on charge un fichier
+	 * @purpose colorie une case // seulement utilisé si on charge un fichier
+	 * @param ligne, col, les coordonées de la case
+	 * @param couleur, la couleur de la case
+	 * @complexity 
 	 */
 	public void RemplirTableau(int ligne, int col, int couleur) {
 		this.coloration(ligne, col, couleur);
 	}
 
 	/*
-	 * Fonction seulement utilisé si on charge un fichier
+	 * @purpose modifie completement le QuadTree
 	 */
 	public void RemplirQuadTree(QuadTree quadTree) {
 		Point p = quadTree.getPoint();
