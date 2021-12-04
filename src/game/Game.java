@@ -227,7 +227,7 @@ public class Game {
 					playing = false;
 				} else {
 					System.out.println("Tour de l'IA 2 : ");
-					this.model.JouerGloutonTemeraire(rouge);
+					this.model.JouerGloutonTemeraire(bleu);
 					if (this.model.estTerminee()) {
 						playing = false;
 					} else {

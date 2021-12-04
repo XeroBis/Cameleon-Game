@@ -96,6 +96,8 @@ public class Model {
 	}
 	/*
 	 * @purpose change la couleur des voisins de la case située en ligne, col suivant les règles
+	 * @param ligne et col, les coordonées du point 
+	 * @param couleur, la couleur de la case que l'on à recolorié
 	 * @complexity O(1)
 	 */
 	public void recolorationBrave(int ligne, int col, int couleur) {
@@ -110,6 +112,11 @@ public class Model {
 		}
 	}
 
+	/*
+	 * @purpose retourne le meilleur point à jouer selon les règles de jeu BRAVE !
+	 * @param couleur, la couleur que l'on veut jouer
+	 * @complexity O(n), n étant le nombre de case ennemi pouvant être capturer
+	 */
 	public Point EvalCaseBrave(int color) {
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
@@ -148,6 +155,11 @@ public class Model {
 		return p;
 	}
 	
+	/*
+	 * @purpose Joue le tour du bot Glouton Brave
+	 * @param couleur, la couleur que l'on veut jouer
+	 * @complexity O(n), n étant le nombre de case ennemi pouvant être capturer
+	 */
 	public void JouerGloutonBrave(int color) {
 		actualizingArrayPointsBrave();
 		Point p = EvalCaseBrave(color);
@@ -155,6 +167,10 @@ public class Model {
 		actualizingArrayPointsBrave();
 	}
 
+	/*
+	 * @purpose Actualise les tableaux des points attaquables 
+	 * @complexity O(n), n étant le nombre de points stokées dans ses deux tableaux
+	 */
 	public void actualizingArrayPointsBrave() {
 		Point p;
 		int size = this.redPoints.size();
@@ -178,6 +194,12 @@ public class Model {
 		}
 	}
 
+	/*
+	 * @purpose Retourne le nombre d'ennemie autour de la case en ligne, col
+	 * @param ligne, col les coord du points que l'on veut tester.
+	 * @param couleur, la couleur que l'on veut jouer
+	 * @complexity O(1)
+	 */
 	public int nbOpponentColorBrave(int ligne, int col, int couleur) {
 		int nb = 0;
 		for (int i = -1; i < 2; i++) {
@@ -192,6 +214,11 @@ public class Model {
 		return nb;
 	}
 
+	/*
+	 * @purpose détermine si la case à une case voisine qui est blanche
+	 * @param couleur, la couleur que l'on veut jouer
+	 * @complexity O(n), n étant le nombre de case ennemi pouvant être capturer
+	 */
 	public boolean hasFreeNeighborBrave(int ligne, int col) {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
@@ -711,5 +738,8 @@ public class Model {
 
 	public boolean isBrave() {
 		return isBrave;
+	}
+	public boolean estTerminee() {
+		return this.plateau.estEntierementColorie();
 	}
 }
