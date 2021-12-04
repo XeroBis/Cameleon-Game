@@ -89,7 +89,7 @@ public class Model {
 		}
 	}
 
-	public Point getBestMoveBrave(int color) {
+	public Point EvalCaseBrave(int color) {
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
 		int max = 0;
@@ -129,7 +129,7 @@ public class Model {
 	
 	public void JouerGloutonBrave(int color) {
 		actualizingArrayPointsBrave();
-		Point p = getBestMoveBrave(color);
+		Point p = EvalCaseBrave(color);
 		colorationBrave(p.gety(), p.getx(), color);
 		actualizingArrayPointsBrave();
 	}
@@ -368,7 +368,7 @@ public class Model {
 	/*
 	 * Fonction permettant de récupérer le meilleur move en terme de différence de point avec l'adversaire
 	 */
-	public Point getBestMoveTemeraire(int color) {
+	public Point EvalCaseTemeraire(int color) {
 		this.actualizingArrayPointsTemeraire();
 		ArrayList<Point> mvp = new ArrayList<Point>();
 		Point p = null;
@@ -462,7 +462,7 @@ public class Model {
 	 */
 	public void JouerGloutonTemeraire(int color) {
 		this.actualizingArrayPointsTemeraire();
-		Point bestMove = getBestMoveTemeraire(color);
+		Point bestMove = EvalCaseTemeraire(color);
 		this.colorationTemeraire(bestMove.gety(), bestMove.getx(), color);
 		this.CalculeScore();
 		this.actualizingArrayPointsTemeraire();

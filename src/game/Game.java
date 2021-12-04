@@ -256,11 +256,11 @@ public class Game {
 		int[] res = new int[2];
 		Point p;
 		if(this.isBrave) {
-			p = this.model.getBestMoveBrave(color);
+			p = this.model.EvalCaseBrave(color);
 			res[0] = p.getx();
 			res[1] = p.gety();
 		} else {
-			p = this.model.getBestMoveTemeraire(color);
+			p = this.model.EvalCaseTemeraire(color);
 			res[0] = p.getx();
 			res[1] = p.gety();
 		}
@@ -343,7 +343,7 @@ public class Game {
 			System.out.print("entrez un nom de fichier : ");
 			String name = scan.next();
 			try {
-				readTextFile(name);
+				remplirPlateau(name);
 				preload = false;
 				
 			} catch (IOException e) {
@@ -371,7 +371,7 @@ public class Game {
 	 * @purpose fonction permettant de lire un fichier txt et de remplir notre plateau avec
 	 * les données contenu dans ce fichier
 	 */
-	public void readTextFile(String filename) throws IOException {
+	public void remplirPlateau(String filename) throws IOException {
 		String dir = System.getProperty("user.dir");
 
 		File file = new File(dir + "/" + filename);
