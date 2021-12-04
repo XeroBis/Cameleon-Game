@@ -407,7 +407,7 @@ public class Model {
 		}
 
 		for (int k = 0; k < this.bluePoints.size(); k++) {
-			p = this.redPoints.get(k);
+			p = this.bluePoints.get(k);
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
 					if (i != 0 || j != 0) {
@@ -683,6 +683,7 @@ public class Model {
 	public int getSize() {
 		return this.size;
 	}
+	
 	public QuadTree getQuadTree() {
 		return this.quadTree;
 	}
